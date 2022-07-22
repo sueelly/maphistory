@@ -1,6 +1,8 @@
 package android.scroll.tlllllll;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,12 +17,18 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class Fragment2 extends Fragment {
 
     RecyclerView recyclerView;
     NoteAdapter adapter;
     Context context;
     TabLayout.OnTabSelectedListener listener;
+
 
     public void onAttach(Context context) {
 
@@ -70,14 +78,75 @@ public class Fragment2 extends Fragment {
             }
         });
 
+        try {
+            loadNoteListData();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return rootView;
 
     }
 
-    private void init(ViewGroup rootView) {
-        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
+    @SuppressLint("Range")
+    public int loadNoteListData() throws ParseException {
 
+        String sql = "select _id, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, PICTURE, CREATE_DATE, MODIFY_DATE from "
+                + NoteDatabase.TABLE_NOTE + " order by CREATE_DATE desc";
+
+        int recordCount =-1;
+        NoteDatabase database = NoteDatabase.getInstance( context);
+        if(database != null) {
+            Cursor outCursor = database.rawQuery(sql);
+
+            recordCount = outCursor.getCount();
+            Toast.makeText(getContext(), recordCount +"", Toast.LENGTH_SHORT).show();
+
+            ArrayList<Note> items = new ArrayList<>();
+
+            for(int i =0; i<recordCount; i++) {
+                outCursor.moveToNext();
+
+                int _id = outCursor.getInt(0);
+                String titleOfDiary =outCursor.getString(1);
+                String address = outCursor.getString(2);
+                String locationX = outCursor.getString(3);
+                String locationY = outCursor.getString(4);
+                String picture = outCursor.getString(5);
+                String contents = outCursor.getString(6);
+                String dateStr = outCursor.getString(7);
+
+//                _id, String titleOfDiary, String createDateStr, String address, String locationX, String locationY, String picture , String contents
+
+                String createDateStr = null;
+                if(dateStr != null && dateStr.length() >10) {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            Date inDate = AppConstants.dateFormat4.parse(dateStr);
+                            //createDateStr = AppConstants.dateFormat3.format(inDate);
+                        }
+
+
+                    } catch (Exception e ) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    createDateStr ="";
+                }
+
+                items.add(new Note(_id,titleOfDiary, dateStr, address, locationX, locationY, picture, contents));
+            }
+
+            outCursor.close();
+
+            adapter.setItems(items);
+            adapter.notifyDataSetChanged();
+
+        }
+
+        return recordCount;
     }
+
 
 
 

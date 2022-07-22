@@ -14,12 +14,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,8 +41,10 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.pedro.library.AutoPermissions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,6 +59,7 @@ public class Fragment1 extends Fragment {
     OnTabItemSelectedListener listener;
     ImageView pictureImageView;
     int selectPhotoMenu;
+    Button save, delete;
 
     boolean isPhotoCaptured;
     boolean isPhotoFileSaved;
@@ -64,6 +70,7 @@ public class Fragment1 extends Fragment {
 
 
     SQLiteDatabase database;
+    EditText where, title, article;
     String table1 = "tableString";
     String table2 = "tableImage";
     ViewGroup rootView;
@@ -98,6 +105,12 @@ public class Fragment1 extends Fragment {
 
         date = (EditText) rootView.findViewById(R.id.date);
         pictureImageView = rootView.findViewById(R.id.pictureImageView);
+        where = rootView.findViewById(R.id.where);
+        title = rootView.findViewById(R.id.title);
+        article = rootView.findViewById(R.id.article);
+
+        Button save = rootView.findViewById(R.id.save);
+        Button delete = rootView.findViewById(R.id.delete);
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +122,7 @@ public class Fragment1 extends Fragment {
         });
 //        imageView = (ImageView) rootView.findViewById(R.id.imageView); // 이거 무조건 setContentView 뒤에 써야함!!!!!!!!!!!!
         pictureImageView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 if(isPhotoCaptured || isPhotoFileSaved) {
@@ -118,9 +132,29 @@ public class Fragment1 extends Fragment {
                 }
             }
         });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveNote();
+
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        //AutoPermissions.Companion.loadAllPermissions(this, 101);
         return rootView;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void showDialog(int id) {
         AlertDialog.Builder builder = null;
 
@@ -163,12 +197,13 @@ public class Fragment1 extends Fragment {
                     }
                 });
                 builder.setPositiveButton("선택", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(selectPhotoMenu ==0) {
                             showPhotoCaptureActivity();
                         } else if(selectPhotoMenu ==1) {
-                            showPhotoCaptureActivity();
+                            showPhotoSelectionActivity();
                         } else if(selectPhotoMenu ==2) {
                             isPhotoCanceled = true;
                             isPhotoCaptured = false;
@@ -193,18 +228,35 @@ public class Fragment1 extends Fragment {
     }
 
     public void showPhotoCaptureActivity() {
-        if(file ==null)
-            file = createFile();
 
-        Uri fileUri = FileProvider.getUriForFile(context, "andriod.scroll.tlllllll.fileprovider", file);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        if(intent.resolveActivity(context.getPackageManager())!= null) {
-            startActivityForResult(intent, AppConstants.REQ_PHOTO_CAPTURE);
-        }
+        MainActivity activity = (MainActivity) getActivity();
+        activity.takePicture();
+
+//        try {
+//            file = createFile();
+//            if (file.exists()) {
+//                file.delete();
+//            }
+//
+//            file.createNewFile();
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        if(Build.VERSION.SDK_INT >= 24) {
+//            uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
+//        } else {
+//            uri = Uri.fromFile(file);
+//        }
+//
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//
+//        if(intent.resolveActivity(context.getPackageManager())!= null) {
+//            startActivityForResult(intent, AppConstants.REQ_PHOTO_CAPTURE);
+//        }
     }
-
-
 
     private File createFile() {
         String filename = "capture.jpg";
@@ -214,12 +266,29 @@ public class Fragment1 extends Fragment {
         return outFile;
     }
 
+    private String createFilename() {
+        Date curDate = new Date();
+        String curDateStr = String.valueOf(curDate.getTime());
+
+        return curDateStr;
+    }
+
+    public void setPicture(String picturePath, int sampleSize) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sampleSize;
+        resultPhotoBitmap = BitmapFactory.decodeFile(picturePath, options);
+
+        pictureImageView.setImageBitmap(resultPhotoBitmap);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void showPhotoSelectionActivity() {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, AppConstants.REQ_PHOTO_SELECTION);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
@@ -230,9 +299,17 @@ public class Fragment1 extends Fragment {
 
                     Log.d(TAG, "resultCode : " + resultCode);
 
-                    //setPicture(file.getAbsolutePath(), 8);
-                    resultPhotoBitmap = decodeSampledBitmapFromResource(file, pictureImageView.getWidth(), pictureImageView.getHeight());
-                    pictureImageView.setImageBitmap(resultPhotoBitmap);
+
+
+                    Bundle extras = intent.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("intent");
+                    pictureImageView.setImageBitmap(imageBitmap);
+
+
+//                    setPicture(file.getAbsolutePath(), 8);
+//                    resultPhotoBitmap = decodeSampledBitmapFromResource(file, pictureImageView.getWidth(), pictureImageView.getHeight());
+//                    pictureImageView.setImageBitmap(resultPhotoBitmap);
+
 
                     break;
 
@@ -268,6 +345,8 @@ public class Fragment1 extends Fragment {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(res.getAbsolutePath(),options);
 
+//        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
@@ -295,29 +374,28 @@ public class Fragment1 extends Fragment {
                 inSampleSize *= 2;
             }
         }
-
         return inSampleSize;
     }
 
+    private void saveNote() {
+        String titleString = title.getText().toString();
+        String address = where.getText().toString();
+        String contents = article.getText().toString();
+        String picturePath = " ";
+        String sql = "insert into " + NoteDatabase.TABLE_NOTE +
+                "(TITLE, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, PICTURE) values(" +
+                "'"+ titleString + "', " +
+                "'"+ address + "', " +
+                "'"+ "" +"', " +
+                "'"+ "" +"', " +
+                "'"+ contents + "', " +
+                "'"+ picturePath + "')";
 
-    private String createFilename() {
-        Date curDate = new Date();
-        String curDateStr = String.valueOf(curDate.getTime());
+        NoteDatabase database = NoteDatabase.getInstance(context);
+        database.execSQL(sql);
 
-        return curDateStr;
     }
 
-    public void getGallery() {
-
-    }
-
-    public void saveFile(View v) {
-
-    }
-
-    public void deletePage(View v) {
-
-    }
 
 }
 
