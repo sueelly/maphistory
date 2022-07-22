@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\USER\\Map707\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_maps.xml",
+        "source": "C:\\Users\\USER\\Map707\\app\\src\\main\\res\\layout\\activity_maps.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\Map707\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_new_page707.xml",
+        "source": "C:\\Users\\USER\\Map707\\app\\src\\main\\res\\layout\\activity_new_page707.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\Map707\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_date_picker707.xml",
+        "source": "C:\\Users\\USER\\Map707\\app\\src\\main\\res\\layout\\fragment_date_picker707.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\Map707\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_diary_page707.xml",
+        "source": "C:\\Users\\USER\\Map707\\app\\src\\main\\res\\layout\\activity_diary_page707.xml"
+    }
+]

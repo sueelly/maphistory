@@ -1,0 +1,168 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="android.scroll.map707"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml
+10
+11    <!--
+12         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+13         Google Maps Android API v2, but you must specify either coarse or fine
+14         location permissions for the "MyLocation" functionality.
+15    -->
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:10:5-79
+16-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:10:22-76
+17    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+17-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:11:5-81
+17-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:11:22-78
+18    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+18-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:12:5-80
+18-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:12:22-77
+19
+20    <!-- Include required permissions for Google Maps API to run. -->
+21    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+21-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:23:5-79
+21-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:23:22-76
+22    <uses-permission android:name="android.permission.INTERNET" />
+22-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:24:5-67
+22-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:24:22-64
+23
+24    <uses-feature
+24-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:26:5-28:35
+25        android:glEsVersion="0x00020000"
+25-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:27:9-41
+26        android:required="true" />
+26-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:28:9-32
+27
+28    <queries>
+28-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:30:5-34:15
+29
+30        <!-- Needs to be explicitly declared on Android R+ -->
+31        <package android:name="com.google.android.apps.maps" />
+31-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:33:9-64
+31-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:33:18-61
+32    </queries>
+33
+34    <application
+34-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:14:5-54:19
+35        android:allowBackup="true"
+35-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:15:9-35
+36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+36-->[androidx.core:core:1.7.0] C:\Users\USER\.gradle\caches\transforms-3\21249a56641fb0309777a5ae16ce99ff\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+37        android:debuggable="true"
+38        android:icon="@mipmap/ic_launcher"
+38-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:16:9-43
+39        android:label="@string/app_name"
+39-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:17:9-41
+40        android:roundIcon="@mipmap/ic_launcher_round"
+40-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:18:9-54
+41        android:supportsRtl="true"
+41-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:19:9-35
+42        android:testOnly="true"
+43        android:theme="@style/Theme.Map707" >
+43-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:20:9-44
+44        <meta-data android:name="com.google.android.actions" >
+44-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:21:9-24:21
+44-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:22:13-54
+45        </meta-data>
+46
+47        <activity
+47-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:26:9-28:40
+48            android:name="android.scroll.map707.DiaryPage707"
+48-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:27:13-41
+49            android:exported="false" />
+49-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:28:13-37
+50        <activity
+50-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:29:9-31:40
+51            android:name="android.scroll.map707.NewPage707"
+51-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:30:13-39
+52            android:exported="false" />
+52-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:31:13-37
+53        <!--
+54             The API key for Google Maps-based APIs is defined as a string resource.
+55             (See the file "res/values/google_maps_api.xml").
+56             Note that the API key is linked to the encryption key used to sign the APK.
+57             You need a different API key for each encryption key, including the release key that is used to
+58             sign the APK for publishing.
+59             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+60        -->
+61        <meta-data
+61-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:40:9-42:55
+62            android:name="com.google.android.geo.API_KEY"
+62-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:41:13-58
+63            android:value="@string/google_maps_key" />
+63-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:42:13-52
+64
+65        <activity
+65-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:44:9-53:20
+66            android:name="android.scroll.map707.MapsActivity"
+66-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:45:13-41
+67            android:exported="true"
+67-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:46:13-36
+68            android:label="@string/title_activity_maps" >
+68-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:47:13-56
+69            <intent-filter>
+69-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:48:13-52:29
+70                <action android:name="android.intent.action.MAIN" />
+70-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:49:17-69
+70-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:49:25-66
+71
+72                <category android:name="android.intent.category.LAUNCHER" />
+72-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:51:17-77
+72-->C:\Users\USER\Map707\app\src\main\AndroidManifest.xml:51:27-74
+73            </intent-filter>
+74        </activity>
+75        <!-- Needs to be explicitly declared on P+ -->
+76        <uses-library
+76-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:39:9-41:40
+77            android:name="org.apache.http.legacy"
+77-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:40:13-50
+78            android:required="false" />
+78-->[com.google.android.gms:play-services-maps:18.0.2] C:\Users\USER\.gradle\caches\transforms-3\90013a2d70c7cdac5ee28478607b5678\transformed\jetified-play-services-maps-18.0.2\AndroidManifest.xml:41:13-37
+79
+80        <activity
+80-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\USER\.gradle\caches\transforms-3\7d19f89ad245d9f627f67ffc17dd7e15\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+81            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+81-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\USER\.gradle\caches\transforms-3\7d19f89ad245d9f627f67ffc17dd7e15\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+82            android:exported="false"
+82-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\USER\.gradle\caches\transforms-3\7d19f89ad245d9f627f67ffc17dd7e15\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+83            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+83-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\USER\.gradle\caches\transforms-3\7d19f89ad245d9f627f67ffc17dd7e15\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+84
+85        <meta-data
+85-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\USER\.gradle\caches\transforms-3\4065ffa9f933b654ef0b655a200e3015\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:21:9-23:69
+86            android:name="com.google.android.gms.version"
+86-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\USER\.gradle\caches\transforms-3\4065ffa9f933b654ef0b655a200e3015\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:22:13-58
+87            android:value="@integer/google_play_services_version" />
+87-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\USER\.gradle\caches\transforms-3\4065ffa9f933b654ef0b655a200e3015\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:23:13-66
+88
+89        <provider
+89-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
+90            android:name="androidx.startup.InitializationProvider"
+90-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:27:13-67
+91            android:authorities="android.scroll.map707.androidx-startup"
+91-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:28:13-68
+92            android:exported="false" >
+92-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:29:13-37
+93            <meta-data
+93-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
+94                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+94-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:32:17-75
+95                android:value="androidx.startup" />
+95-->[androidx.emoji2:emoji2:1.0.0] C:\Users\USER\.gradle\caches\transforms-3\beb1e8c1d1724370afa1be71eb324942\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:33:17-49
+96            <meta-data
+96-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\USER\.gradle\caches\transforms-3\4d87c3e3b70abeed5e61faf08f3b9b5b\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
+97                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+97-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\USER\.gradle\caches\transforms-3\4d87c3e3b70abeed5e61faf08f3b9b5b\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
+98                android:value="androidx.startup" />
+98-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\USER\.gradle\caches\transforms-3\4d87c3e3b70abeed5e61faf08f3b9b5b\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
+99        </provider>
+100    </application>
+101
+102</manifest>
