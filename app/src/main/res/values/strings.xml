@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MapHistory</string>
+    <string name="autocomplete_address_label"></string>
+</resources>
