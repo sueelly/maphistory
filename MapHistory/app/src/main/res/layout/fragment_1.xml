@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Fragment1">
+
+        <RelativeLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="제목을 입력하세요."
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/date"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:hint="날짜를 입력하세요."
+                android:orientation="horizontal"
+                app:layout_constraintBaseline_toBaselineOf="@+id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/date"
+                android:id="@+id/where"
+                android:hint="장소를 입력하세요."
+                android:autofillHints="" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="40dp"
+                android:clickable="true"
+                app:maxImageSize="30dp"
+                app:srcCompat="@android:drawable/ic_menu_day" />
+
+            <ImageButton
+                android:id="@+id/writePlace"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="90dp"
+                android:layout_marginRight="40dp"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/pictureImageView"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:layout_below="@+id/where"/>
+
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/article"
+                android:hint="내용을 입력하세요."
+                android:layout_below="@id/pictureImageView"
+                android:lineSpacingExtra="5sp"
+                android:padding="10dp"/>
+
+            <Button
+                android:id="@+id/getImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/article"
+                android:text="갤러리"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <Button
+                android:id="@+id/Camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/article"
+                android:text="cam"
+                android:layout_toRightOf="@+id/getImage"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/article"
+                android:textColorLink="@color/purple_200"
+                android:text="저장" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/save"
+                android:layout_below="@+id/article"
+                android:textColorLink="@color/purple_200"
+                android:text="삭제" />
+
+
+        </RelativeLayout>
+    </FrameLayout>
+
+
+</ScrollView>
