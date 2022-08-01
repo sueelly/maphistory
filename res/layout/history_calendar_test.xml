@@ -7,10 +7,9 @@
     tools:context=".HistoryCalendarActivity">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/materialCalendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFF0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
 

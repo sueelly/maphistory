@@ -27,6 +27,7 @@
         <activity android:name=".HistoryCalendarActivity">
 
         </activity>
+        <activity android:name="history_calendar_test"></activity>
         <activity android:name=".NewHistoryActivity"></activity>
 
     </application>

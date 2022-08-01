@@ -1,9 +1,16 @@
 package com.example.maphistory;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,42 +19,43 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 public class HistoryCalendarActivity extends AppCompatActivity {
-    MaterialCalendarView materialCalendarView = findViewById(R.id.calendarView);
+    MaterialCalendarView materialCalendarView;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.history_calendar);
 
-        ;
+        materialCalendarView = findViewById(R.id.calendarView);
         materialCalendarView.setSelectedDate(CalendarDay.today());
+
+        List<CalendarDay> calendarDays = getDates();
 
         materialCalendarView.addDecorators(
                 new SundayDecorator(),
-                new SaturdayDecorator()
+                new SaturdayDecorator(),
+                new EventDecorator(Color.RED, calendarDays, HistoryCalendarActivity.this),
+                new TodayDecorator()
         );
 
-        MaterialCalendarView calendarView = findViewById(R.id.calendarView);
-        calendarView.setSelectedDate(CalendarDay.today());
-
-        List<CalendarDay> calendarDays = getDates();
-        calendarView.addDecorator(new EventDecorator(Color.RED, calendarDays));
-
-        /*
         materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 boolean check = false;
                 check = calendarDays.contains(date);
                 if(check){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class); //나중에 해당 일기페이지로 이동하도록 설정
+                    Intent intent = new Intent(HistoryCalendarActivity.this, MainActivity.class); //나중에 해당 일기페이지로 이동하도록 설정
                     startActivity(intent);
                 }
                 else {
@@ -56,8 +64,6 @@ public class HistoryCalendarActivity extends AppCompatActivity {
                 }
             }
         });
-        */
-
     }
 
     List<CalendarDay> getDates(){
@@ -67,7 +73,7 @@ public class HistoryCalendarActivity extends AppCompatActivity {
     private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
 
         @Override
-        protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
+        protected ArrayList<CalendarDay> doInBackground(@NonNull Void... voids) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -87,23 +93,14 @@ public class HistoryCalendarActivity extends AppCompatActivity {
             return dates;
         }
 
-        @Override
-        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
-            super.onPostExecute(calendarDays);
 
-            if (isFinishing()) {
-                return;
-            }
-
-            materialCalendarView.addDecorator(new EventDecorator(Color.RED, calendarDays));        }
     }
 }
 class SaturdayDecorator implements DayViewDecorator {
 
     private final Calendar calendar = Calendar.getInstance();
 
-    public SaturdayDecorator() {
-    }
+    public SaturdayDecorator() {}
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
@@ -122,8 +119,7 @@ class SundayDecorator implements DayViewDecorator {
 
     private final Calendar calendar = Calendar.getInstance();
 
-    public SundayDecorator() {
-    }
+    public SundayDecorator() {}
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
@@ -139,11 +135,16 @@ class SundayDecorator implements DayViewDecorator {
 }
 
 class EventDecorator implements DayViewDecorator {
-
+    private final Drawable drawable;
     private final int color;
     private final HashSet<CalendarDay> dates;
 
-    public EventDecorator(int color, Collection<CalendarDay> dates) {
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public EventDecorator(int color, Collection<CalendarDay> dates, Activity context) {
+
+        drawable = context.getResources().getDrawable(R.drawable.calendar_background);
+
         this.color = color;
         this.dates = new HashSet<>(dates);
     }
@@ -155,6 +156,34 @@ class EventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
+        view.setSelectionDrawable(drawable);
         view.addSpan(new DotSpan(5, color));
+
     }
 }
+
+class TodayDecorator implements DayViewDecorator {
+
+    private CalendarDay date;
+
+    public TodayDecorator() {
+        date = CalendarDay.today();
+    }
+
+    @Override
+    public boolean shouldDecorate(CalendarDay day) {
+        return date != null && day.equals(date);
+    }
+
+    @Override
+    public void decorate(DayViewFacade view) {
+        view.addSpan(new StyleSpan(Typeface.BOLD));
+        view.addSpan(new RelativeSizeSpan(1.4f));
+        view.addSpan(new ForegroundColorSpan(Color.GREEN));
+    }
+
+    public void setDate(Date date) {
+        this.date = CalendarDay.from(date);
+    }
+}
+
