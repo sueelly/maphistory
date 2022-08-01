@@ -64,7 +64,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String MAP_FRAGMENT_TAG = "MAP";
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Place place = Autocomplete.getPlaceFromIntent(intent);
 
                         Log.d(TAG, "Place: " + place.getAddressComponents());
-                        fillInAddress(place);
+                        
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     Log.i(TAG, "User canceled autocomplete");
@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(final GoogleMap googleMap) {
 
         this.map = googleMap;
+        this.map.setOnMapClickListener(this);
 
         try{
             boolean success = map.setMapStyle(
@@ -163,12 +164,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Info 창 설정 ... 나중에
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            View window = getLayoutInflater().inflate(R.layout.map_info, null);
             @Nullable
             @Override
             public View getInfoContents(@NonNull Marker marker) {
-                return null;
+                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
+                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
+                        finish();
+                    }
+                });
+                return window;
             }
-
             @Nullable
             @Override
             public View getInfoWindow(@NonNull Marker marker) {
@@ -188,6 +197,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerOptions.snippet("한국의 수도");
         marker = map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+    }
+
+    /**
+     *지도 클릭이벤트
+     */
+    @Override
+    public void onMapClick(LatLng point) {
+        // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
+        MarkerOptions markerO = new MarkerOptions();
+        markerO.position(point);
+        markerO.title(point.toString());
+        marker = map.addMarker(markerO);
+        marker.showInfoWindow();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
     }
 
     /**
@@ -391,10 +414,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Place.Field.LAT_LNG, Place.Field.VIEWPORT);
 
         // Build the autocomplete intent with field, county, and type filters applied
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .setHint("장소를 검색하세요")
+                .setCountry("KR")
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+        startAutocomplete.launch(intent);
     }
 
     private void fillInAddress(Place place) {
