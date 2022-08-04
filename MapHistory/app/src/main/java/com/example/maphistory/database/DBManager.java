@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DBManager extends SQLiteOpenHelper {
-    static final String DATABASE_NAME = "database.db";
+    static final String DATABASE_NAME = "test.db";
 
     // DBHelper 생성자
     public DBManager(Context context, int version) {
@@ -17,34 +17,34 @@ public class DBManager extends SQLiteOpenHelper {
     // Person Table 생성
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Diary(name TEXT, Age INT, ADDR TEXT)");
+        db.execSQL("CREATE TABLE Person(name TEXT, Age INT, ADDR TEXT)");
     }
 
     // Person Table Upgrade
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Diary");
+        db.execSQL("DROP TABLE IF EXISTS Person");
         onCreate(db);
     }
 
     // Person Table 데이터 입력
     public void insert(String name, int age, String Addr) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO Diary VALUES('" + name + "', " + age + ", '" + Addr + "')");
-        db.close();
+        db.execSQL("INSERT INTO Person VALUES('" + name + "', " + age + ", '" + Addr + "')");
+//        db.close();
     }
 
     // Person Table 데이터 수정
     public void Update(String name, int age, String Addr) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("UPDATE Diary SET age = " + age + ", ADDR = '" + Addr + "'" + " WHERE NAME = '" + name + "'");
+        db.execSQL("UPDATE Person SET age = " + age + ", ADDR = '" + Addr + "'" + " WHERE NAME = '" + name + "'");
         db.close();
     }
 
     // Person Table 데이터 삭제
     public void Delete(String name) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE Diary WHERE NAME = '" + name + "'");
+        db.execSQL("DELETE Person WHERE NAME = '" + name + "'");
         db.close();
     }
 
@@ -55,7 +55,7 @@ public class DBManager extends SQLiteOpenHelper {
         String result = "";
 
         // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
-        Cursor cursor = db.rawQuery("SELECT * FROM Diary", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM Person", null);
         while (cursor.moveToNext()) {
             result += " 이름 : " + cursor.getString(0)
                     + ", 나이 : "
@@ -67,4 +67,7 @@ public class DBManager extends SQLiteOpenHelper {
 
         return result;
     }
+
+
+
 }

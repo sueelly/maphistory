@@ -40,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.maphistory.database.DBManager;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -67,6 +68,7 @@ public class Fragment1 extends Fragment {
     int selectPhotoMenu;
     Button save, delete;
     ImageButton writePlace;
+    DBManager dbHelper;
 
     boolean isPhotoCaptured;
     boolean isPhotoFileSaved;
@@ -115,10 +117,29 @@ public class Fragment1 extends Fragment {
         where = rootView.findViewById(R.id.where);
         title = rootView.findViewById(R.id.title);
         article = rootView.findViewById(R.id.article);
-
+        delete = rootView.findViewById(R.id.delete);
+        save = rootView.findViewById(R.id.save);
         writePlace = rootView.findViewById(R.id.writePlace);
-        Button save = rootView.findViewById(R.id.save);
-        Button delete = rootView.findViewById(R.id.delete);
+
+        dbHelper = new DBManager(getActivity(), 1);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.insert(title.getText().toString(), 2, where.getText().toString());
+
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                article.setText(dbHelper.getResult());
+
+            }
+        });
+
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,15 +182,6 @@ public class Fragment1 extends Fragment {
 //
 //            }
 //        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
-
 
         //AutoPermissions.Companion.loadAllPermissions(this, 101);
         return rootView;

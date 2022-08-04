@@ -4,24 +4,26 @@ package com.example.maphistory;
 public class Note {
 
     int _id;
+    String titleOfDiary;
+    String createDateStr;
     String address;
     String locationX;
     String locationY;
-    String titleOfDiary;
-    String contents;
     String picture;
-    String createDateStr;
+    String contents;
+
 
     public Note(int _id, String titleOfDiary, String createDateStr, String address, String locationX, String locationY, String picture , String contents
     ) {
         this._id =_id;
+        this.titleOfDiary = titleOfDiary;
+        this.createDateStr =createDateStr;
         this.address = address;
         this.locationX =locationX;
         this.locationY = locationY;
-        this.titleOfDiary = titleOfDiary;
-        this.contents = contents;
         this.picture = picture;
-        this.createDateStr =createDateStr;
+        this.contents = contents;
+
     }
 
     public int get_id() {

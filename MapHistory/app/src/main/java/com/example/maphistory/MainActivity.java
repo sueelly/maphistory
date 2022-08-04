@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Place place = Autocomplete.getPlaceFromIntent(intent);
 
                         Log.d(TAG, "Place: " + place.getAddressComponents());
-                        
+
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     Log.i(TAG, "User canceled autocomplete");
@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setHint("장소를 검색하세요")
                 .setCountry("KR")
                 .build(this);
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+//        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
         startAutocomplete.launch(intent);
     }
 
