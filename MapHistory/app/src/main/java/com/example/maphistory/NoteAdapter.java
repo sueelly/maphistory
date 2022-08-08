@@ -1,5 +1,6 @@
 package com.example.maphistory;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.maphistory.database.DBManager;
+
 import java.util.ArrayList;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements OnNoteItemClickListener {
 
+    DBManager dbHelper;
     ArrayList<Note> items = new ArrayList<Note>();
     OnNoteItemClickListener listener;
 
@@ -33,6 +37,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
         Note item = items.get(position);
         viewHolder.setItem(item);
+
+    }
+
+    public NoteAdapter(Context context) {
+        dbHelper = new DBManager(context, 1);
+        items = dbHelper.loadNoteList();
+
 
     }
 
