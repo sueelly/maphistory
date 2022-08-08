@@ -51,6 +51,7 @@ import com.pedro.library.AutoPermissions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,6 +70,7 @@ public class Fragment1 extends Fragment {
     Button save, delete;
     ImageButton writePlace;
     DBManager dbHelper;
+    Note item;
 
     boolean isPhotoCaptured;
     boolean isPhotoFileSaved;
@@ -76,6 +78,7 @@ public class Fragment1 extends Fragment {
     File file;
     Bitmap resultPhotoBitmap;
     Uri uri;
+    SimpleDateFormat todayDateFormat;
 
 
     SQLiteDatabase database;
@@ -126,7 +129,8 @@ public class Fragment1 extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHelper.insert(title.getText().toString(), 2, where.getText().toString());
+                dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
+                        " ", " ", " " , article.getText().toString() );
 
             }
         });
@@ -184,6 +188,9 @@ public class Fragment1 extends Fragment {
 //        });
 
         //AutoPermissions.Companion.loadAllPermissions(this, 101);
+
+        applyItem();
+
         return rootView;
     }
 
@@ -408,4 +415,38 @@ public class Fragment1 extends Fragment {
         }
         return inSampleSize;
     }
+
+    public void setItem(Note item) {
+        this.item = item;
+    }
+
+    public void applyItem() {
+
+        if (item != null) {
+
+            title.setText(item.getTitleOfDiary());
+            date.setText(item.getCreateDateStr());
+            where.setText(item.getAddress());
+            article.setText(item.getContents());
+
+
+            String picturePath = item.getPicture();
+
+            if (picturePath == null || picturePath.equals("")) {
+                pictureImageView.setImageResource(R.drawable.picture1);
+            } else {
+                setPicture(item.getPicture(), 1);
+            }
+
+        } else {
+
+            Date currentDate = new Date();
+            if (todayDateFormat == null) {
+                todayDateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
+            }
+
+        }
+
+    }
+
 }

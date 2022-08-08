@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class NewAndListActivity extends AppCompatActivity implements AutoPermissionsListener {
+public class NewAndListActivity extends AppCompatActivity implements AutoPermissionsListener, OnTabItemSelectedListener {
 
     Fragment1 fragment1;
     Fragment2 fragment2;
@@ -167,23 +167,21 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
         return inSampleSize;
     }
 
+    @Override
+    public void onTabSelected(int position) {
 
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void openDatabase() {
-//        // open database
-//        if (mDatabase != null) {
-//            mDatabase.close();
-//            mDatabase = null;
-//        }
-//
-//        mDatabase = NoteDatabase.getInstance(this);
-//        boolean isOpen = mDatabase.open();
-//        if (isOpen) {
-//            Log.d(TAG, "Note database is open.");
-//        } else {
-//            Log.d(TAG, "Note database is not open.");
-//        }
-//    }
+    }
+
+    @Override
+    public void showFragment1(Note item) {
+        fragment1 = new Fragment1();
+        fragment1.setItem(item);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment1).commit();
+
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

@@ -33,6 +33,7 @@ public class Fragment2 extends Fragment {
     Context context;
     TabLayout.OnTabSelectedListener listener;
     SimpleDateFormat todayDateFormat;
+    Fragment1 fragmentNew;
 
 
     public void onAttach(Context context) {
@@ -81,7 +82,15 @@ public class Fragment2 extends Fragment {
             @Override
             public void onItemClick(NoteAdapter.ViewHolder holder, View view, int position) {
                 Note item = adapter.getItem(position);
-                Toast.makeText(getContext(), "아이템 선택됨" +item.getContents(), Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getContext(), "선택: " +item.getContents(), Toast.LENGTH_SHORT).show();
+                fragmentNew = new Fragment1();
+                fragmentNew.setItem(item);
+
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragmentNew).commit();
+
             }
         });
 

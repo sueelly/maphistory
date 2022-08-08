@@ -11,7 +11,7 @@ import com.example.maphistory.Note;
 import java.util.ArrayList;
 
 public class DBManager extends SQLiteOpenHelper {
-    static final String DATABASE_NAME = "test.db";
+    static final String DATABASE_NAME = "DiaryTest.db";
 
     // DBHelper 생성자
     public DBManager(Context context, int version) {
@@ -23,55 +23,77 @@ public class DBManager extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM Person", null);
-        while (cursor.moveToNext()) {
-            Note item = new Note();
-            item.titleOfDiary = cursor.getString(1);
-            item.contents = cursor.getString(2);
-            item.address = cursor.getString(3);
+        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME", null);
 
-            items.add(item);
+        if(cursor!=null && cursor.getCount() > 0)
+        {
+            if (cursor.moveToFirst())
+            {
+                do {
+                    Note item = new Note();
+                    item._id = cursor.getInt(0);
+                    item.titleOfDiary = cursor.getString(1);
+                    item.createDateStr = cursor.getString(2);
+                    item.address = cursor.getString(3);
+                    item.locationX = cursor.getString(4);
+                    item.locationY = cursor.getString(5);
+                    item.picture = cursor.getString(6);
+                    item.contents = cursor.getString(7);
 
+                    items.add(item);
+
+                } while (cursor.moveToNext());
+            }
         }
-
         return items;
     }
 
 
-
     // Person Table 생성
+//    @Override
+//    public void onCreate(SQLiteDatabase db) {
+//        db.execSQL("CREATE TABLE TABLE_NAME(name TEXT, Age INT, ADDR TEXT)");
+//    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Person(name TEXT, Age INT, ADDR TEXT)");
+        db.execSQL("CREATE TABLE TABLE_NAME( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, address TEXT, locationX TEXT, locationY TEXT, picture TEXT, contents TEXT)");
     }
 
     // Person Table Upgrade
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Person");
+        db.execSQL("DROP TABLE IF EXISTS TABLE_NAME");
         onCreate(db);
     }
 
     // Person Table 데이터 입력
-    public void insert(String name, int age, String Addr) {
+    public void insert(String title, String date, String address, String locationX, String locationY, String picture, String contents) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO Person VALUES('" + name + "', " + age + ", '" + Addr + "')");
+        db.execSQL("INSERT INTO TABLE_NAME (title, date, address, locationX, locationY, picture, contents) VALUES(" +
+                "'"+ title + "', " +
+                "'"+ date + "', " +
+                "'"+ address + "', " +
+                "'"+ " " + "', " +
+                "'"+ " " + "', " +
+                "'"+ picture + "', " +
+                "'"+ contents + "')");
 //        db.close();
     }
 
-    // Person Table 데이터 수정
-    public void Update(String name, int age, String Addr) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("UPDATE Person SET age = " + age + ", ADDR = '" + Addr + "'" + " WHERE NAME = '" + name + "'");
-        db.close();
-    }
-
-    // Person Table 데이터 삭제
-    public void Delete(String name) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE Person WHERE NAME = '" + name + "'");
-        db.close();
-    }
+//    // Person Table 데이터 수정
+//    public void Update(String name, int age, String Addr) {
+//        SQLiteDatabase db = getWritableDatabase();
+//        db.execSQL("UPDATE TABLE_NAME SET age = " + age + ", ADDR = '" + Addr + "'" + " WHERE NAME = '" + name + "'");
+//        db.close();
+//    }
+//
+//    // Person Table 데이터 삭제
+//    public void Delete(String name) {
+//        SQLiteDatabase db = getWritableDatabase();
+//        db.execSQL("DELETE TABLE_NAME WHERE NAME = '" + name + "'");
+//        db.close();
+//    }
 
     // Person Table 조회
     public String getResult() {
@@ -80,19 +102,26 @@ public class DBManager extends SQLiteOpenHelper {
         String result = "";
 
         // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
-        Cursor cursor = db.rawQuery("SELECT * FROM Person", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME", null);
         while (cursor.moveToNext()) {
-            result += " 이름 : " + cursor.getString(0)
-                    + ", 나이 : "
-                    + cursor.getInt(1)
-                    + ", 주소 : "
+            result += " id: " + cursor.getInt(0)
+                    + ", 제목: "
+                    + cursor.getString(1)
+                    + ", 날짜: "
                     + cursor.getString(2)
+                    + ", 주소 : "
+                    + cursor.getString(3)
+                    + ", X값: "
+                    + cursor.getString(4)
+                    + ", Y값: "
+                    + cursor.getString(5)
+                    + ", 사진: "
+                    + cursor.getString(6)
+                    + ", 내용: "
+                    + cursor.getString(7)
                     + "\n";
         }
-
         return result;
     }
-
-
 
 }

@@ -114,7 +114,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 pictureImageView.setImageResource(R.drawable.ic_info);
             }
 
-            contentsTextView.setText(item.getContents());
+            contentsTextView.setText(item.getTitleOfDiary());
             locationTextView.setText((item.getAddress()));
             dateTextView.setText(item.getCreateDateStr());
 
