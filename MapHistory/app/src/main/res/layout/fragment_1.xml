@@ -97,7 +97,7 @@
                 android:padding="10dp"/>
 
             <Button
-                android:id="@+id/getImage"
+                android:id="@+id/gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article"
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article"
                 android:text="cam"
-                android:layout_toRightOf="@+id/getImage"
+                android:layout_toRightOf="@+id/gallery"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <Button

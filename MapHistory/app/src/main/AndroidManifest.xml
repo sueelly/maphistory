@@ -27,11 +27,22 @@
         tools:targetApi="31">
         <activity
             android:name=".NewAndListActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/external" />
+        </provider>
 
         <activity
             android:name=".MainActivity"
@@ -44,7 +55,8 @@
         </activity>
         <activity android:name=".NewHistoryActivity" />
         <activity android:name=".HistoryListActivity" />
-        <activity android:name=".MapHistoryActivity" />
+        <activity android:name=".MapHistoryActivity"
+                  android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

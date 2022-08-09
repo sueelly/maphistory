@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.maphistory.model.AutocompleteEditText;
 import androidx.activity.result.ActivityResult;
@@ -224,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_rightArrow = (ImageButton) findViewById(R.id.rightArrowButton);
     }
 
+
     /**
      * Buttons listener
      */
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case R.id.historyListButton:
                         //History List Button -> History List Activity로 이동
-                        startActivity(new Intent(getApplicationContext(), HistoryListActivity.class));
+                        startActivity(new Intent(getApplicationContext(), NewAndListActivity.class));
 
                         break;
                     case R.id.mapHistoryButton:
@@ -504,12 +506,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 //TODO: Handle the error.
+                Toast.makeText(getApplicationContext(), " dd", Toast.LENGTH_LONG).show();
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Log.i(TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {

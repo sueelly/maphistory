@@ -31,6 +31,7 @@ public class Fragment2 extends Fragment {
     RecyclerView recyclerView;
     NoteAdapter adapter;
     Context context;
+    Button writeNewDiary;
     TabLayout.OnTabSelectedListener listener;
     SimpleDateFormat todayDateFormat;
     Fragment1 fragmentNew;
@@ -62,6 +63,16 @@ public class Fragment2 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_2, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
+        writeNewDiary = rootView.findViewById(R.id.writeNewDiary);
+        writeNewDiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment1 fragment1 = new Fragment1();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment1).commit();
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 

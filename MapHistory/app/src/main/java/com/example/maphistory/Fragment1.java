@@ -1,5 +1,6 @@
 package com.example.maphistory;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.maphistory.SelectDateFragment.DATE;
 
@@ -21,6 +22,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
@@ -41,8 +43,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.maphistory.database.DBManager;
+import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -62,12 +66,13 @@ import java.util.zip.Inflater;
 public class Fragment1 extends Fragment {
 
     private static final String TAG = "Fragment1";
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     Context context;
     OnTabItemSelectedListener listener;
     ImageView pictureImageView;
     int selectPhotoMenu;
-    Button save, delete;
+    Button save, delete, gallery;
     ImageButton writePlace;
     DBManager dbHelper;
     Note item;
@@ -83,8 +88,6 @@ public class Fragment1 extends Fragment {
 
     SQLiteDatabase database;
     EditText where, title, article;
-    String table1 = "tableString";
-    String table2 = "tableImage";
     ViewGroup rootView;
     DatePickerDialog datePickerDialog;
     FloatingActionButton floatingActionButton;
@@ -124,6 +127,8 @@ public class Fragment1 extends Fragment {
         save = rootView.findViewById(R.id.save);
         writePlace = rootView.findViewById(R.id.writePlace);
 
+        gallery = rootView.findViewById(R.id.gallery);
+
         dbHelper = new DBManager(getActivity(), 1);
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +136,10 @@ public class Fragment1 extends Fragment {
             public void onClick(View view) {
                 dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
                         " ", " ", " " , article.getText().toString() );
+                Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                Fragment2 fragment2 = new Fragment2();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment2).commit();
 
             }
         });
@@ -138,8 +147,11 @@ public class Fragment1 extends Fragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                article.setText(dbHelper.getResult());
+                dbHelper.deleteNote(item);
+                Toast.makeText(getActivity(), "해당 일기가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                Fragment2 fragment2 = new Fragment2();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment2).commit();
 
             }
         });
@@ -179,15 +191,15 @@ public class Fragment1 extends Fragment {
 
         });
 
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                saveNote();
-//
-//            }
-//        });
+        // 현재는 수정버튼 대신에 사용 중
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        //AutoPermissions.Companion.loadAllPermissions(this, 101);
+                resetting(item);
+                dbHelper.modifyNote(item);
+            }
+        });
 
         applyItem();
 
@@ -418,6 +430,14 @@ public class Fragment1 extends Fragment {
 
     public void setItem(Note item) {
         this.item = item;
+    }
+
+    public void resetting(Note item) {
+        item.titleOfDiary = title.getText().toString();
+        item.createDateStr = date.getText().toString();
+        item.address = where.getText().toString();
+        item.contents = article.getText().toString();
+
     }
 
     public void applyItem() {

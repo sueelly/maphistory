@@ -88,12 +88,39 @@ public class DBManager extends SQLiteOpenHelper {
 //        db.close();
 //    }
 //
-//    // Person Table 데이터 삭제
-//    public void Delete(String name) {
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("DELETE TABLE_NAME WHERE NAME = '" + name + "'");
-//        db.close();
-//    }
+
+    public void modifyNote(Note item) {
+        if (item != null) {
+            // update note
+            SQLiteDatabase db = getWritableDatabase();
+            String sql = "update " + "TABLE_NAME" +
+                    " set " +
+                    "   title = '" + item.titleOfDiary + "'" +
+                    "   ,date = '" + item.createDateStr + "'" +
+                    "   ,address = '" + item.address + "'" +
+                    "   ,locationX = '" + "" + "'" +
+                    "   ,locationY = '" + "" + "'" +
+                    "   ,picture = '" + "" + "'" +
+                    "   ,contents = '" + item.contents + "'" +
+                    " where " +
+                    "   _id = " + item._id;
+
+            db.execSQL(sql);
+        }
+    }
+
+    public void deleteNote(Note item) {
+
+         if (item != null) {
+             SQLiteDatabase db = getWritableDatabase();
+
+             String sql = "delete from " + "TABLE_NAME" +
+                     " where " +
+                     "   _id = " + item._id;
+             db.execSQL(sql);
+
+    }
+}
 
     // Person Table 조회
     public String getResult() {

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.pedro.library.AutoPermissions;
@@ -36,6 +37,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
     //    public static NoteDatabase mDatabase = null;
     private static final String TAG = "MainActivity";
+
 
     File file;
     Uri uri;
