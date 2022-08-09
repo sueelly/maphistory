@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.maphistory.model.AutocompleteEditText;
 import androidx.activity.result.ActivityResult;
@@ -27,6 +29,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
@@ -37,6 +41,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -58,13 +63,17 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String MAP_FRAGMENT_TAG = "MAP";
@@ -72,12 +81,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private CameraPosition cameraPosition;
 
     private View mapPanel;
-    private Marker marker;
+    private MarkerOptions markerOption_clicked;
+    private MarkerOptions markerOption_history;
+    private Marker marker_clicked;
+    private Marker marker_history;
     private LatLng coordinates;
+    private Place selected_place;
 
     // The Buttons of MainActivity
     private Button btn_newHistory, btn_historyList, btn_mapHistory;
     private ImageButton btn_leftArrow, btn_rightArrow;
+
+    // info fragment about places
+    private SelectedPlaceFragment selectedPlaceFragment1;
+    private FragmentManager fragmentManager1;
+    private FragmentTransaction fragmentTransaction1;
+
 
     // The entry point to the Places API
     private PlacesClient placesClient;
@@ -98,16 +117,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
     final String apiKey = BuildConfig.MAPS_API_KEY;
 
+    /**
+     * 자동완성 기능 수행 intent, 이벤트 지정
+     */
     private final ActivityResultLauncher<Intent> startAutocomplete = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             (ActivityResultCallback<ActivityResult>) result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     if (intent != null) {
-                        Place place = Autocomplete.getPlaceFromIntent(intent);
-                        Log.d(TAG, "Place: " + place.getAddressComponents());
-                        //marker.setPosition(place.getLatLng());
-                        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15f));
+                        //여기에 검색 결과 클릭시 이벤트 작성
+                        //마커 추가, 카메라 이동, 장소에 대한 정보창 fragment 띄우기
+                        selected_place = Autocomplete.getPlaceFromIntent(intent);
+
+                        Log.d(TAG, "Place: " + selected_place.getName() +"," + selected_place.getId() +
+                                "," + selected_place.getAddress());
+
+                        Marker m1 = map.addMarker(new MarkerOptions()
+                                .position(selected_place.getLatLng())
+                                .title(selected_place.getName())
+                                .snippet(selected_place.getAddress())
+                                .alpha(0.8f)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                        String a = selected_place.getName();
+                        addressField.setHint(a);
+
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
+
+                        selectedPlaceFragment1 = new SelectedPlaceFragment();
+                        fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
 
                     }
 
@@ -135,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         placesClient = Places.createClient(this);
 
+
         // Construct a FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -142,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addressField = (AutocompleteEditText) findViewById(R.id.autocomplete_address);
         addressField.setOnClickListener(v -> startAutocompleteIntent());
 
-
+        //fragment manager for "selected_place_fragment"
+        fragmentManager1 = getSupportFragmentManager();
+        fragmentTransaction1 = fragmentManager1.beginTransaction();
     }
 
     /**
@@ -153,7 +195,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         this.map = googleMap;
         this.map.setOnMapClickListener(this);
+        markerOption_clicked = new MarkerOptions();
+        markerOption_history = new MarkerOptions();
 
+        /**
+         * map style 지정
+         */
         try{
             boolean success = map.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -168,25 +215,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Info 창 설정 ... 나중에
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            View window = getLayoutInflater().inflate(R.layout.map_info, null);
             @Nullable
             @Override
-            public View getInfoContents(@NonNull Marker marker) {
-                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
-                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
-                        finish();
-                    }
-                });
-                return window;
-            }
+            public View getInfoContents(@NonNull Marker marker) {return null;}
             @Nullable
             @Override
-            public View getInfoWindow(@NonNull Marker marker) {
-                return null;
-            }
+            public View getInfoWindow(@NonNull Marker marker) {return null;}
         });
 
         getLocationPermission();
@@ -194,13 +228,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //getDeviceLocation();
 
         //처음 시작할 때 위치 설정 -> 가장 최근 History의 위치로
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(defaultLocation);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
-        marker = map.addMarker(markerOptions);
+        markerOption_history.position(defaultLocation)
+                .title("서울")
+                .snippet("한국의 수도")
+                .alpha(0.8f)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        marker_history = map.addMarker(markerOption_history);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+
+
+        // marker click event -> info 뜨게
+        map.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow();
+            return true;
+        });
     }
 
 
@@ -210,13 +251,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapClick(LatLng point) {
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
-        MarkerOptions markerO = new MarkerOptions();
-        markerO.position(point);
-        markerO.title(point.toString());
-        marker = map.addMarker(markerO);
-        marker.showInfoWindow();
+        markerOption_clicked.position(point)
+                .alpha(0.8f)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        marker_clicked = map.addMarker(markerOption_clicked);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
     }
+
 
     /**
      * Buttons initialization
@@ -240,17 +281,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.newHistoryButton:
                         //New History Button -> New History Activity로 이동
                         startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
-                        finish(); //finish 맞나?
                         break;
                     case R.id.historyListButton:
                         //History List Button -> History List Activity로 이동
                         startActivity(new Intent(getApplicationContext(), HistoryListActivity.class));
-                        finish();
                         break;
                     case R.id.mapHistoryButton:
                         //Map History Button -> Map History Activity로 이동
                         startActivity(new Intent(getApplicationContext(), MapHistoryActivity.class));
-                        finish();
                         break;
                     case R.id.leftArrowButton:
                         //Left Button -> 이전 History로 이동
@@ -417,25 +455,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Set the fields to specify which types of place data to
         // return after the user has made a selection.
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS_COMPONENTS,
-                Place.Field.LAT_LNG, Place.Field.VIEWPORT);
+                Place.Field.LAT_LNG, Place.Field.VIEWPORT, Place.Field.NAME);
 
         // Build the autocomplete intent with field, county, and type filters applied
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .setHint("장소를 검색하세요")
                 .setCountry("KR")
                 .build(this);
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+
         startAutocomplete.launch(intent);
-    }
-
-    private void fillInAddress(Place place) {
-        AddressComponents components = place.getAddressComponents();
-        StringBuilder address1 = new StringBuilder();
-
-        addressField.setText(address1.toString());
-
-        // Add a map for visual confirmation of the address
-        showMap(place);
     }
 
     private void showMap(Place place) {
@@ -467,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void updateMap(LatLng latLng) {
-        marker.setPosition(latLng);
+        marker_clicked.setPosition(latLng);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
         if (mapPanel.getVisibility() == View.GONE) {
             mapPanel.setVisibility(View.VISIBLE);
@@ -480,32 +508,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapPanel.setVisibility(View.GONE);
         }
         addressField.requestFocus();
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getAndCompareLocations() {
-        // TODO: Detect and handle if user has entered or modified the address manually and update
-        // the coordinates variable to the Lat/Lng of the manually entered address. May use
-        // Geocoding API to convert the manually entered address to a Lat/Lng.
-        LatLng enteredLocation = coordinates;
-        map.setMyLocationEnabled(true);
-
-        // [START maps_solutions_android_location_get]
-        FusedLocationProviderClient fusedLocationClient =
-                LocationServices.getFusedLocationProviderClient(this);
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-            // Got last known location. In some rare situations this can be null.
-            if (location == null) {
-                return;
-            }
-
-            deviceLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            // [START_EXCLUDE]
-            Log.d(TAG, "device location = " + deviceLocation.toString());
-            Log.d(TAG, "entered location = " + enteredLocation.toString());
-
-        });
     }
 
     @Override
@@ -525,5 +527,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }
 
