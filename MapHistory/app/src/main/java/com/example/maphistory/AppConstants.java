@@ -21,7 +21,7 @@ public class AppConstants {
     public static final int CONTENT_PHOTO = 105;
     public static final int CONTENT_PHOTO_EX = 106;
 
-    public static String FOLDER_PHOTO;
+    public static String FOLDER_PHOTO = "foll";
 
     public static final String KEY_URI_PHOTO = "URI_PHOTO";
 

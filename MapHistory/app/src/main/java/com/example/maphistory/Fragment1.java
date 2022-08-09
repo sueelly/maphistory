@@ -54,12 +54,14 @@ import com.pedro.library.AutoPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.Inflater;
 
 
@@ -72,7 +74,7 @@ public class Fragment1 extends Fragment {
     OnTabItemSelectedListener listener;
     ImageView pictureImageView;
     int selectPhotoMenu;
-    Button save, delete, gallery;
+    Button save, delete, gallery, camera;
     ImageButton writePlace;
     DBManager dbHelper;
     Note item;
@@ -126,17 +128,30 @@ public class Fragment1 extends Fragment {
         delete = rootView.findViewById(R.id.delete);
         save = rootView.findViewById(R.id.save);
         writePlace = rootView.findViewById(R.id.writePlace);
+        camera = rootView.findViewById(R.id.camera);
 
         gallery = rootView.findViewById(R.id.gallery);
 
         dbHelper = new DBManager(getActivity(), 1);
 
-        save.setOnClickListener(new View.OnClickListener() {
+        camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MapHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                String picturePath = savePicture();
                 dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
-                        " ", " ", " " , article.getText().toString() );
+                        " ", " ", picturePath , article.getText().toString() );
                 Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                dbHelper.getResult();
+
                 Fragment2 fragment2 = new Fragment2();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment2).commit();
@@ -311,9 +326,9 @@ public class Fragment1 extends Fragment {
     }
 
     private File createFile() {
-        String filename = "capture.jpg";
-        File storageDir = Environment.getExternalStorageDirectory();
-        File outFile = new File(storageDir, filename);
+        String filename = createFilename();
+//        File storageDir = Environment.getExternalStorageDirectory();
+        File outFile = new File(context.getFilesDir(), filename);
 
         return outFile;
     }
@@ -426,6 +441,34 @@ public class Fragment1 extends Fragment {
             }
         }
         return inSampleSize;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String savePicture() {
+        if (resultPhotoBitmap == null) {
+            Toast.makeText(context, "No picture", Toast.LENGTH_SHORT).show();
+            return "";
+        }
+
+        File photoFolder = new File(AppConstants.FOLDER_PHOTO);
+
+        if(!photoFolder.isDirectory()) {
+            Log.d(TAG, "creating photo folder : " + photoFolder);
+            photoFolder.mkdirs();
+        }
+
+        String photoFilename = createFilename();
+        String picturePath = photoFolder + File.separator + photoFilename;
+
+        try {
+            FileOutputStream outstream = new FileOutputStream(picturePath);
+            resultPhotoBitmap.compress(Bitmap.CompressFormat.PNG, 100, outstream);
+            outstream.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return picturePath;
     }
 
     public void setItem(Note item) {

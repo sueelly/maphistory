@@ -90,6 +90,7 @@ public class Fragment2 extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnNoteItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClick(NoteAdapter.ViewHolder holder, View view, int position) {
                 Note item = adapter.getItem(position);
