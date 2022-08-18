@@ -100,7 +100,7 @@ public class DBManager extends SQLiteOpenHelper {
                     "   ,address = '" + item.address + "'" +
                     "   ,locationX = '" + "" + "'" +
                     "   ,locationY = '" + "" + "'" +
-                    "   ,picture = '" + "" + "'" +
+                    "   ,picture = '" + item.picture + "'" +
                     "   ,contents = '" + item.contents + "'" +
                     " where " +
                     "   _id = " + item._id;

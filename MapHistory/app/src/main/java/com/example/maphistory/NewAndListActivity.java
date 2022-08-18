@@ -38,11 +38,12 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
     //    public static NoteDatabase mDatabase = null;
     private static final String TAG = "MainActivity";
 
-
+    NavigationBarView bottomNavigation;
     File file;
     Uri uri;
     Bitmap resultPhotoBitmap;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -54,7 +55,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment1).commit();
 
-        NavigationBarView bottomNavigation = findViewById(R.id.bottom_navigation);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -73,6 +74,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
                 return false;
             }
         });
+        setPicturePath();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
 
@@ -202,7 +204,16 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
         Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setPicturePath() {
+        String folderPath = getFilesDir().getAbsolutePath();
+        AppConstants.FOLDER_PHOTO = folderPath + File.separator + "photo";
 
+        File photoFolder = new File(AppConstants.FOLDER_PHOTO);
+        if (!photoFolder.exists()) {
+            photoFolder.mkdirs();
+        }
+    }
 
 
 }
