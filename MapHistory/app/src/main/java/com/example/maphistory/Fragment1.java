@@ -4,6 +4,8 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.maphistory.SelectDateFragment.DATE;
 import static com.example.maphistory.AppConstants.SAVE_MODIFY;
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -152,7 +154,7 @@ public class Fragment1 extends Fragment {
                 else if(SAVE_MODIFY ==1) {
                     String picturePath = savePicture();
                     dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
-                            " ", " ", picturePath , article.getText().toString() );
+                            X+"", Y+"", picturePath , article.getText().toString() );
                     Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     dbHelper.getResult();
 

@@ -24,8 +24,6 @@ public class SelectedPlaceFragment extends Fragment {
 
                 startActivity(new Intent(getActivity(), NewAndListActivity.class));
 
-                btn_new_history.setText("왜 안되냐");
-
             }
         });
 

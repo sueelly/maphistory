@@ -2,6 +2,8 @@ package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -71,6 +73,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -138,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .snippet(selected_place.getAddress())
                                 .alpha(0.8f)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                        X = selected_place.getLatLng().longitude;
+                        Y = 100.5;
 
                         String a = selected_place.getName();
                         addressField.setHint(a);
@@ -265,9 +271,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      *지도 클릭이벤트
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapClick(LatLng point) {
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
+
+
         markerOption_clicked.position(point)
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
@@ -400,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
 
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onComplete(@NonNull Task<Location> task){
                         if(task.isSuccessful()) {

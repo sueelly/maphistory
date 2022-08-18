@@ -74,8 +74,8 @@ public class DBManager extends SQLiteOpenHelper {
                 "'"+ title + "', " +
                 "'"+ date + "', " +
                 "'"+ address + "', " +
-                "'"+ " " + "', " +
-                "'"+ " " + "', " +
+                "'"+ locationX + "', " +
+                "'"+ locationY + "', " +
                 "'"+ picture + "', " +
                 "'"+ contents + "')");
 //        db.close();

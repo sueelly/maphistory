@@ -18,6 +18,8 @@ public class AppConstants {
 
     // 저장:1 , 수정: 2
     public static int SAVE_MODIFY = 1;
+    public static double X;
+    public static double Y;
 
     public static String FOLDER_PHOTO="";
 
