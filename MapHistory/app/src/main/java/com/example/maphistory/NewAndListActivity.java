@@ -34,6 +34,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
     Fragment1 fragment1;
     Fragment2 fragment2;
+    Fragment3 fragment3;
 
     //    public static NoteDatabase mDatabase = null;
     private static final String TAG = "MainActivity";
@@ -52,6 +53,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment1).commit();
 
@@ -68,6 +70,10 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
                     case R.id.tab2:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment2).commit();
+                        return true;
+
+                    case R.id.tab3:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment3).commit();
                         return true;
                 }
 
