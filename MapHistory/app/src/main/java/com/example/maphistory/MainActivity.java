@@ -5,6 +5,8 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static com.example.maphistory.AppConstants.X;
 import static com.example.maphistory.AppConstants.Y;
 
+import static java.lang.System.in;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.maphistory.database.DBManager;
 import com.example.maphistory.model.AutocompleteEditText;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -44,6 +47,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -69,8 +73,10 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -81,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private CameraPosition cameraPosition;
     private Place place;
+    Note item;
+    ArrayList<Note> items = new ArrayList<Note>();
+    private final List<Marker> markers = new ArrayList<Marker>();
+    DBManager dbHelper;
+    Fragment1 fragmentOpen;
 
     private View mapPanel;
     private MarkerOptions markerOption_clicked;
@@ -143,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
                         X = selected_place.getLatLng().longitude;
-                        Y = 100.5;
+                        Y = selected_place.getLatLng().latitude;
 
                         String a = selected_place.getName();
                         addressField.setHint(a);
@@ -189,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentManager1 = getSupportFragmentManager();
         fragmentTransaction1 = fragmentManager1.beginTransaction();
 
+
     }
 
     /**
@@ -201,6 +213,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.map.setOnMapClickListener(this);
         markerOption_clicked = new MarkerOptions();
         markerOption_history = new MarkerOptions();
+
+        dbHelper = new DBManager(getApplicationContext(), 1);
+        items = dbHelper.loadNoteList();
+
 
         /**
          * map style 지정
@@ -244,12 +260,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateLocationUI();
         //getDeviceLocation();
 
+        //zoom in/out 버튼 사용 가능
+        UiSettings uiSettings = this.map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
+        //zoom control 위치 조정
+        googleMap.setPadding(0,0,16,600);
+
         //처음 시작할 때 위치 설정 -> 가장 최근 History의 위치로
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(defaultLocation);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
+
+        for(Note i: items) {
+
+            LatLng latlng = new LatLng(Double.parseDouble(i.getLocationY()), Double.parseDouble(i.getLocationX()));
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng)
+                    .title(i.titleOfDiary)
+                    .snippet(i.contents);
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(i.titleOfDiary)
+                    .snippet(i.contents));
+            marker.setTag(i);
+            markers.add(marker);
+
+        }
+
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                item = (Note) marker.getTag();
+                Toast.makeText(getApplicationContext(), item.titleOfDiary, Toast.LENGTH_SHORT).show();
+
+                fragmentOpen = new Fragment1();
+                fragmentOpen.setItem(item);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container1, fragmentOpen).commit();
+//                Toast.makeText(getApplicationContext(), item.locationX, Toast.LENGTH_LONG).show();
+
+
+
+
+            }
+        });
 
         markerOption_history.position(defaultLocation)
                 .title("서울")
@@ -262,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
+
             marker.showInfoWindow();
             return true;
         });

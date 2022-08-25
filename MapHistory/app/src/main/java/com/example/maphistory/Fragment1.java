@@ -142,22 +142,22 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(SAVE_MODIFY ==2) {
-
-                    resetting(item);
-                    dbHelper.modifyNote(item);
-                    Toast.makeText(getActivity(), "일기가 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                    Fragment2 fragment2 = new Fragment2();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragment2).commit();
-                }
-                else if(SAVE_MODIFY ==1) {
+                if(SAVE_MODIFY ==1) {
                     String picturePath = savePicture();
                     dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
                             X+"", Y+"", picturePath , article.getText().toString() );
                     Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     dbHelper.getResult();
 
+                    Fragment2 fragment2 = new Fragment2();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.container, fragment2).commit();
+                }
+                else if(SAVE_MODIFY ==2) {
+
+                    resetting(item);
+                    dbHelper.modifyNote(item);
+                    Toast.makeText(getActivity(), "일기가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                     Fragment2 fragment2 = new Fragment2();
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.container, fragment2).commit();

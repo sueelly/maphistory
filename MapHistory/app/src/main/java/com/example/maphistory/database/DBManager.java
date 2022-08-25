@@ -98,8 +98,8 @@ public class DBManager extends SQLiteOpenHelper {
                     "   title = '" + item.titleOfDiary + "'" +
                     "   ,date = '" + item.createDateStr + "'" +
                     "   ,address = '" + item.address + "'" +
-                    "   ,locationX = '" + "" + "'" +
-                    "   ,locationY = '" + "" + "'" +
+                    "   ,locationX = '" + item.locationX + "'" +
+                    "   ,locationY = '" + item.locationY + "'" +
                     "   ,picture = '" + item.picture + "'" +
                     "   ,contents = '" + item.contents + "'" +
                     " where " +

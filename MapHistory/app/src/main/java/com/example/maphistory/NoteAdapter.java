@@ -49,7 +49,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         dbHelper = new DBManager(context, 1);
         items = dbHelper.loadNoteList();
 
-
     }
 
     @Override
