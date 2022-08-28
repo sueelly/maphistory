@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
@@ -14,22 +16,15 @@ public class SelectedPlaceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //Inflate the layout for this fragment
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.selected_place_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_selected_place, container, false);
 
-        Button btn_new_history = (Button) rootView.findViewById(R.id.btn_new_history);
+        ImageView btn_new_history = (ImageView) rootView.findViewById(R.id.btn_newhistory);
 
-        btn_new_history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), NewHistoryActivity.class);
-                startActivity(intent);
-
-                startActivity(new Intent(getActivity(), NewHistoryActivity.class));
-
-                btn_new_history.setText("왜 안되냐");
-                int a = 3;
-            }
+        btn_new_history.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), NewAndListActivity.class));
         });
+        //btn_new_history.setOnClickListener(v->
+                //startActivity(new Intent(getActivity(), NewAndListActivity.class)))
 
         return rootView;
     }

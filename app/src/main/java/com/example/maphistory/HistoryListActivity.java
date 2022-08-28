@@ -9,4 +9,7 @@ public class HistoryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_list);
     }
+
+
+
 }
