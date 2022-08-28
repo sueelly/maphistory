@@ -12,20 +12,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.maphistory.database.DBManager;
+
 import java.util.Calendar;
 
 public class SelectDateFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     public static String DATE="";
+    public static Calendar CALENDER;
+    DBManager dbHelper;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        dbHelper = new DBManager(getActivity(), 1);
+
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
+        CALENDER = c;
 
         return new DatePickerDialog(getActivity(),this,year,month,day);
     }
@@ -45,6 +53,7 @@ public class SelectDateFragment extends DialogFragment
 
         Toast.makeText(getContext(), "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
         DATE = dateMessage;
+
     }
 
 }

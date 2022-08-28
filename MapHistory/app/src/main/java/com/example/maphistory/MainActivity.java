@@ -12,6 +12,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +51,7 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -91,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<Note> items = new ArrayList<Note>();
     private final List<Marker> markers = new ArrayList<Marker>();
     DBManager dbHelper;
-    Fragment1 fragmentOpen;
+    Fragment1 fragmentOpen= null;
+    Bitmap photoBitmap;
 
     private View mapPanel;
     private MarkerOptions markerOption_clicked;
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // A default location (SEOUL) and default zoom
     private final LatLng defaultLocation = new LatLng(37.56, 126.97);
-    private static final int DEFAULT_ZOOM = 16;
+    private static final int DEFAULT_ZOOM = 13;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
 
@@ -159,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String a = selected_place.getName();
                         addressField.setHint(a);
 
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
 
                         selectedPlaceFragment1 = new SelectedPlaceFragment();
                         fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
@@ -276,10 +281,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerOptions2.position(latlng)
                     .title(i.titleOfDiary)
                     .snippet(i.contents);
+
+//
+//            try {
+//                setPicture(i.getPicture(),10);
+//            } catch (Exception E){
+//                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+//            }
+
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(latlng)
                     .title(i.titleOfDiary)
-                    .snippet(i.contents));
+                    .snippet(i.contents)
+                    .icon(null));
             marker.setTag(i);
             markers.add(marker);
 
@@ -297,10 +311,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container1, fragmentOpen).commit();
-//                Toast.makeText(getApplicationContext(), item.locationX, Toast.LENGTH_LONG).show();
-
-
-
 
             }
         });
@@ -318,7 +328,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setOnMarkerClickListener(marker -> {
 
             marker.showInfoWindow();
+
+//            selectedPlaceFragment1 = new SelectedPlaceFragment();
+//            fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
             return true;
+
         });
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
     }
@@ -329,14 +343,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapClick(LatLng point) {
+        //Remove all marker
+//        map.clear();
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
-
-
         markerOption_clicked.position(point)
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        //Animating to zoom the marker
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
+        //Add marker
         marker_clicked = map.addMarker(markerOption_clicked);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
     }
 
     /**
@@ -350,6 +366,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_rightArrow = (ImageButton) findViewById(R.id.rightArrowButton);
     }
 
+    private void setPicture(String picturePath, int sampleSize) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sampleSize;
+        photoBitmap = BitmapFactory.decodeFile(picturePath, options);
+    }
 
     /**
      * Buttons listener

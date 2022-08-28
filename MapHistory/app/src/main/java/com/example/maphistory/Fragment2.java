@@ -97,8 +97,12 @@ public class Fragment2 extends Fragment {
                 fragmentNew = new Fragment1();
                 fragmentNew.setItem(item);
 
+                NewAndListActivity ad= (NewAndListActivity) getActivity();
+                ad.bottomNavigation.setSelectedItemId(R.id.tab1);
+
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragmentNew).commit();
+
 
             }
         });

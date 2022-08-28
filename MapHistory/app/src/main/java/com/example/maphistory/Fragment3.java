@@ -69,11 +69,22 @@ public class Fragment3 extends Fragment {
                 boolean check = false;
                 check = calendarDays.contains(date);
                 if(check){
-                    Intent intent = new Intent(getContext(), MainActivity.class); //나중에 해당 일기페이지로 이동하도록 설정
-                    startActivity(intent);
+
+                    Calendar calendar = date.getCalendar();
+                    int a = calendar.get(Calendar.MONTH);
+                    String dd = calendar.toString();
+
+                    Toast.makeText(getContext(), dd , Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(getContext(), MainActivity.class); //나중에 해당 일기페이지로 이동하도록 설정
+//                    startActivity(intent);
                 }
                 else {
-                    Toast.makeText(getActivity(), "새 일기 작성으로 넘어가개", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), NewAndListActivity.class);
+
+                    Fragment1 fragment1 = new Fragment1();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.container, fragment1).commit();
+
                 }
             }
         });
@@ -98,11 +109,15 @@ public class Fragment3 extends Fragment {
             }
             Calendar calendar = Calendar.getInstance();
             //이번에는 직접 설정한 데이트값인데, 나중에 db랑 연동해서 값 넣으면 될듯
+
             calendar.add(Calendar.MONTH, -2); //2달전부터
+
             ArrayList<CalendarDay> dates = new ArrayList<>();
             for (int i = 0; i < 30; i++) {
                 CalendarDay day = CalendarDay.from(calendar);
                 dates.add(day);
+                String d = calendar.toString();
+
                 calendar.add(Calendar.DATE, 5); //5일 간격으로 CalendarDay 타입 추가
 
             }

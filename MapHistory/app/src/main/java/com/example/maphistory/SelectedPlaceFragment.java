@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
@@ -16,16 +18,13 @@ public class SelectedPlaceFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_selected_place, container, false);
 
-        Button btn_new_history = (Button) rootView.findViewById(R.id.btn_new_history);
+        ImageView btn_new_history = (ImageView) rootView.findViewById(R.id.btn_newhistory);
 
-        btn_new_history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(getActivity(), NewAndListActivity.class));
-
-            }
+        btn_new_history.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), NewAndListActivity.class));
         });
+        //btn_new_history.setOnClickListener(v->
+        //startActivity(new Intent(getActivity(), NewAndListActivity.class)))
 
         return rootView;
     }

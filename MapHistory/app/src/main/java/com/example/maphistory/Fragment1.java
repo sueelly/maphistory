@@ -149,18 +149,18 @@ public class Fragment1 extends Fragment {
                     Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     dbHelper.getResult();
 
-                    Fragment2 fragment2 = new Fragment2();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragment2).commit();
+                    NewAndListActivity ad= (NewAndListActivity) getActivity();
+                    ad.bottomNavigation.setSelectedItemId(R.id.tab2);
+
                 }
                 else if(SAVE_MODIFY ==2) {
 
                     resetting(item);
                     dbHelper.modifyNote(item);
                     Toast.makeText(getActivity(), "일기가 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                    Fragment2 fragment2 = new Fragment2();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragment2).commit();
+
+                    NewAndListActivity ad= (NewAndListActivity) getActivity();
+                    ad.bottomNavigation.setSelectedItemId(R.id.tab2);
                 }
 
             }
@@ -170,9 +170,8 @@ public class Fragment1 extends Fragment {
             public void onClick(View view) {
                 dbHelper.deleteNote(item);
                 Toast.makeText(getActivity(), "해당 일기가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                Fragment2 fragment2 = new Fragment2();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment2).commit();
+                NewAndListActivity ad= (NewAndListActivity) getActivity();
+                ad.bottomNavigation.setSelectedItemId(R.id.tab2);
 
             }
         });
@@ -196,14 +195,15 @@ public class Fragment1 extends Fragment {
         });
         writePlace.setOnClickListener(v ->
         {
-            List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS_COMPONENTS,
-                    Place.Field.LAT_LNG, Place.Field.VIEWPORT);
-
-            // Build the autocomplete intent with field, county, and type filters applied
-            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-                    .setHint("장소를 검색하세요")
-                    .build(getActivity());
-            startActivityForResult(intent, 1);
+            //Initialize fragment
+            Fragment wrt_place_fragment = new WritePlaceFragment();
+            //Open fragment
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.map_container1, wrt_place_fragment)
+                    .addToBackStack(null)
+                    .commit();
 
         });
 
