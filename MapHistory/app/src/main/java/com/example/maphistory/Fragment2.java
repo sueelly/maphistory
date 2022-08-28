@@ -77,12 +77,12 @@ public class Fragment2 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new NoteAdapter(context);
-        adapter.addItem(new Note(0, "제목1", "7월 1일", "주소", "x", "y",
+        adapter.addItem(new Note(0, "제목1", "7월 1일", "주소", "37.56", "126.97",
                 "String picture" , "즐거운 하루"
         ));
-        adapter.addItem(new Note(1, "제목1", "7월 1일", "주소", "x", "y",
+        adapter.addItem(new Note(1, "제목1", "7월 1일", "주소", "37.60", "126.97",
                 "String picture" , "즐거운 하루"));
-        adapter.addItem(new Note(2, "제목1", "7월 1일", "주소", "x", "y",
+        adapter.addItem(new Note(2, "제목1", "7월 1일", "주소", "37.56", "126.100",
                 "String picture" , "즐거운 하루"));
 
 
@@ -111,9 +111,7 @@ public class Fragment2 extends Fragment {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-
         return rootView;
-
     }
 
 //    public int loadNoteListData() {

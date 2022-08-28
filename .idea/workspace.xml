@@ -21,7 +21,6 @@
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_pedroSG94_AutoPermissions_1_0_3_aar.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_material_material_1_4_0_aar.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_jetbrains_annotations_15_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/.idea/modules/app.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/maphistory/Fragment1.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/maphistory/Fragment2.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/maphistory/NewAndListActivity.java" afterDir="false" />
@@ -98,6 +97,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/modules/app/MapHistory.app.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/MapHistory.app.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/app/MapHistory.app.unitTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/MapHistory.app.unitTest.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/NoteAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/NoteAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/SelectDateFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/MapHistory/app/src/main/java/com/example/maphistory/SelectDateFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/maphistory/HistoryListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/maphistory/HistoryListActivity.java" afterDir="false" />
@@ -113,7 +115,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\USER\.android\avd\Pixel_2_API_29.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/jeongdahyun/.android/avd/Pixel_3a_API_32_arm64-v8a.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
