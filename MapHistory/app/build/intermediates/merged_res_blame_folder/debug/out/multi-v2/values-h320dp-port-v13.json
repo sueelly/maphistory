@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.maphistory.app-mergeDebugResources-27:/values-h320dp-port-v13/values-h320dp-port-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/jeongdahyun/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/c129231f1dedff0d2aeb2b38fc746625/transformed/material-1.4.0/res/values-h320dp-port-v13/values-h320dp-port-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "75",
+                        "endOffsets": "126"
+                    }
+                }
+            ]
+        }
+    ]
+}
