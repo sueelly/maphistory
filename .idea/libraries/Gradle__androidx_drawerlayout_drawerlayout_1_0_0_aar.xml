@@ -2,15 +2,19 @@
   <library name="Gradle: androidx.drawerlayout:drawerlayout:1.0.0@aar">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b0e323279d52fc1fa13cdc444af43e1c/transformed/drawerlayout-1.0.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/60888f37d7203862a43a002d75b34abc/transformed/drawerlayout-1.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b0e323279d52fc1fa13cdc444af43e1c/transformed/drawerlayout-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b0e323279d52fc1fa13cdc444af43e1c/transformed/drawerlayout-1.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b0e323279d52fc1fa13cdc444af43e1c/transformed/drawerlayout-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/60888f37d7203862a43a002d75b34abc/transformed/drawerlayout-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/60888f37d7203862a43a002d75b34abc/transformed/drawerlayout-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/60888f37d7203862a43a002d75b34abc/transformed/drawerlayout-1.0.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.drawerlayout/drawerlayout/1.0.0/9ecd4ecb7da215ba4c5c3e00bf8d290dad6f2bc5/drawerlayout-1.0.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/modules-2/files-2.1/androidx.drawerlayout/drawerlayout/1.0.0/9ecd4ecb7da215ba4c5c3e00bf8d290dad6f2bc5/drawerlayout-1.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

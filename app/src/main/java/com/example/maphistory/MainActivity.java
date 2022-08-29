@@ -184,8 +184,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentManager1 = getSupportFragmentManager();
         fragmentTransaction1 = fragmentManager1.beginTransaction();
 
-        //note adapter initialization
-        adapter = new NoteAdapter(this.getApplicationContext());
     }
 
     /**
@@ -247,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //zoom control 위치 조정
         googleMap.setPadding(0,0,16,600);
 
-
         //처음 시작할 때 위치 설정 -> 가장 최근 History의 위치로
         markerOption_history.position(defaultLocation)
                 .title("서울")
@@ -260,11 +257,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
+
             selectedPlaceFragment1 = new SelectedPlaceFragment();
             fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
             return true;
         });
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+
     }
 
     /**
@@ -273,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapClick(LatLng point) {
         //Remove all marker
-        map.clear();
+        //map.clear();
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
         markerOption_clicked.position(point)
                 .alpha(0.8f)
@@ -554,28 +552,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            return;
 //        }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * main activity의 버튼들 비활성화
-     */
-    public void buttonOut() {
-        btn_rightArrow.setVisibility(View.GONE);
-        btn_leftArrow.setVisibility(View.GONE);
-        btn_mapHistory.setVisibility(View.GONE);
-        btn_historyList.setVisibility(View.GONE);
-        btn_newHistory.setVisibility(View.GONE);
-    }
-
-    /**
-     * main activity 버튼 활성화
-     */
-    public void buttonIn() {
-        btn_rightArrow.setVisibility(View.VISIBLE);
-        btn_leftArrow.setVisibility(View.VISIBLE);
-        btn_mapHistory.setVisibility(View.VISIBLE);
-        btn_historyList.setVisibility(View.VISIBLE);
-        btn_newHistory.setVisibility(View.VISIBLE);
     }
 }
 

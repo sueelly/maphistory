@@ -5,7 +5,12 @@
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.27810211181640626" />
+        <entry key="app/src/main/res/drawable/leftarrow_states.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/marker_states.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2649093627929688" />
+        <entry key="app/src/main/res/layout/activity_new_and_list.xml" value="0.12259371833839919" />
+        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.12259371833839919" />
+        <entry key="app/src/main/res/layout/fragment_write_place.xml" value="0.12259371833839919" />
         <entry key="app/src/main/res/layout/map_info.xml" value="0.23862457275390625" />
         <entry key="app/src/main/res/layout/selected_place_fragment.xml" value="0.1814224243164063" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />

@@ -4,9 +4,12 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/0b94459af3f3d0f0d8508bde6a1967f7/transformed/jetified-places-2.6.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0b94459af3f3d0f0d8508bde6a1967f7/transformed/jetified-places-2.6.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0b94459af3f3d0f0d8508bde6a1967f7/transformed/jetified-places-2.6.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/201f7edc6ea6ba9e96e260ac56b12163/transformed/jetified-places-2.6.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/201f7edc6ea6ba9e96e260ac56b12163/transformed/jetified-places-2.6.0/res" />
+      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/201f7edc6ea6ba9e96e260ac56b12163/transformed/jetified-places-2.6.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.libraries.places/places/2.6.0/c23fd5eb65d0d9eb8c32bad01960074b17b87dab/places-2.6.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/modules-2/files-2.1/com.google.android.libraries.places/places/2.6.0/c23fd5eb65d0d9eb8c32bad01960074b17b87dab/places-2.6.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>
