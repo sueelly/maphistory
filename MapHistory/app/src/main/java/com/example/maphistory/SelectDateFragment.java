@@ -46,14 +46,21 @@ public class SelectDateFragment extends DialogFragment
     }
 
     public void processDatePickerResult(int year, int month, int day){
-        String month_string = Integer.toString(month+1);
-        String day_string = Integer.toString(day);
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
         String year_string = Integer.toString(year);
-        String dateMessage = (year_string + "." + month_string + "." + day_string);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
 
         Toast.makeText(getContext(), "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
         DATE = dateMessage;
 
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 
 }
