@@ -2,13 +2,21 @@ package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
+
+import static java.lang.System.in;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.maphistory.database.DBManager;
 import com.example.maphistory.model.AutocompleteEditText;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -25,6 +34,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -40,6 +50,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -64,10 +76,14 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -75,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private CameraPosition cameraPosition;
     private Place place;
+    Note item;
+    ArrayList<Note> items = new ArrayList<Note>();
+    private final List<Marker> markers = new ArrayList<Marker>();
+    DBManager dbHelper;
+    Fragment1 fragmentOpen= null;
+    Bitmap photoBitmap;
 
     private View mapPanel;
     private MarkerOptions markerOption_clicked;
@@ -101,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // A default location (SEOUL) and default zoom
     private final LatLng defaultLocation = new LatLng(37.56, 126.97);
-    private static final int DEFAULT_ZOOM = 16;
+    private static final int DEFAULT_ZOOM = 13;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
 
@@ -136,10 +158,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .alpha(0.8f)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
+                        X = selected_place.getLatLng().longitude;
+                        Y = selected_place.getLatLng().latitude;
+
                         String a = selected_place.getName();
                         addressField.setHint(a);
 
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
 
                         selectedPlaceFragment1 = new SelectedPlaceFragment();
                         fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
@@ -180,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentManager1 = getSupportFragmentManager();
         fragmentTransaction1 = fragmentManager1.beginTransaction();
 
+
     }
 
     /**
@@ -192,6 +218,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.map.setOnMapClickListener(this);
         markerOption_clicked = new MarkerOptions();
         markerOption_history = new MarkerOptions();
+
+        dbHelper = new DBManager(getApplicationContext(), 1);
+        items = dbHelper.loadNoteList();
+
 
         /**
          * map style 지정
@@ -210,18 +240,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Info 창 설정 ... 나중에
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-//            View window = getLayoutInflater().inflate(R.layout.map_info, null);
+            View window = getLayoutInflater().inflate(R.layout.map_info, null);
             @Nullable
             @Override
             public View getInfoContents(@NonNull Marker marker) {
-//                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
-//                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
-//                        finish();
-//                    }
-//                });
+                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
+                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
+                        finish();
+                    }
+                });
                 return null;
             }
             @Nullable
@@ -235,12 +265,63 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateLocationUI();
         //getDeviceLocation();
 
+        //zoom in/out 버튼 사용 가능
+        UiSettings uiSettings = this.map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
+        //zoom control 위치 조정
+        googleMap.setPadding(0,0,16,600);
+
         //처음 시작할 때 위치 설정 -> 가장 최근 History의 위치로
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(defaultLocation);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
+
+        for(Note i: items) {
+
+            LatLng latlng = new LatLng(Double.parseDouble(i.getLocationY()), Double.parseDouble(i.getLocationX()));
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng)
+                    .title(i.titleOfDiary)
+                    .snippet(i.contents);
+
+//
+//            try {
+//                setPicture(i.getPicture(),10);
+//            } catch (Exception E){
+//                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+//            }
+
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(i.titleOfDiary)
+                    .snippet(i.contents)
+                    .icon(null));
+            marker.setTag(i);
+
+            // 일기 시점에 따라 투명도 설정으로 구분
+            Note note = (Note) marker.getTag();
+            int dateOfNote = Integer.parseInt(note.createDateStr);
+            if( dateOfNote < 20220612 ) {
+                marker.setAlpha(0.5f);
+            }
+
+            markers.add(marker);
+
+        }
+
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                item = (Note) marker.getTag();
+                Toast.makeText(getApplicationContext(), item.titleOfDiary, Toast.LENGTH_SHORT).show();
+
+                fragmentOpen = new Fragment1();
+                fragmentOpen.setItem(item);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container1, fragmentOpen).commit();
+
+            }
+        });
 
         markerOption_history.position(defaultLocation)
                 .title("서울")
@@ -253,8 +334,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
+
             marker.showInfoWindow();
+
+            if( marker.getTag() == null) {
+                selectedPlaceFragment1 = new SelectedPlaceFragment();
+                fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
+            }
+
             return true;
+
         });
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
     }
@@ -262,14 +351,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      *지도 클릭이벤트
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapClick(LatLng point) {
+        //Remove all marker
+//        map.clear();
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
+
+
         markerOption_clicked.position(point)
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        //Animating to zoom the marker
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
+        //Add marker
         marker_clicked = map.addMarker(markerOption_clicked);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
     }
 
     /**
@@ -283,6 +379,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_rightArrow = (ImageButton) findViewById(R.id.rightArrowButton);
     }
 
+    private void setPicture(String picturePath, int sampleSize) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sampleSize;
+        photoBitmap = BitmapFactory.decodeFile(picturePath, options);
+    }
 
     /**
      * Buttons listener
@@ -397,6 +498,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
 
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onComplete(@NonNull Task<Location> task){
                         if(task.isSuccessful()) {
@@ -545,5 +647,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    long time = 0;
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - time >= 1000) {
+            time = System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(), "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else if (System.currentTimeMillis() - time < 1000) { // 뒤로 가기 한번 더 눌렀을때의 시간간격 텀이 1초
+            finishAffinity();
+            System.runFinalization();
+            System.exit(0);
+        }
+    }
+
 }
 

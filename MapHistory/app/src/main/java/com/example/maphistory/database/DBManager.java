@@ -23,7 +23,7 @@ public class DBManager extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME ORDER BY date", null);
 
         if(cursor!=null && cursor.getCount() > 0)
         {
@@ -74,8 +74,8 @@ public class DBManager extends SQLiteOpenHelper {
                 "'"+ title + "', " +
                 "'"+ date + "', " +
                 "'"+ address + "', " +
-                "'"+ " " + "', " +
-                "'"+ " " + "', " +
+                "'"+ locationX + "', " +
+                "'"+ locationY + "', " +
                 "'"+ picture + "', " +
                 "'"+ contents + "')");
 //        db.close();
@@ -98,9 +98,9 @@ public class DBManager extends SQLiteOpenHelper {
                     "   title = '" + item.titleOfDiary + "'" +
                     "   ,date = '" + item.createDateStr + "'" +
                     "   ,address = '" + item.address + "'" +
-                    "   ,locationX = '" + "" + "'" +
-                    "   ,locationY = '" + "" + "'" +
-                    "   ,picture = '" + "" + "'" +
+                    "   ,locationX = '" + item.locationX + "'" +
+                    "   ,locationY = '" + item.locationY + "'" +
+                    "   ,picture = '" + item.picture + "'" +
                     "   ,contents = '" + item.contents + "'" +
                     " where " +
                     "   _id = " + item._id;

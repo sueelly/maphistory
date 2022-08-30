@@ -5,33 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/place_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="169dp"
-        android:layout_marginBottom="184dp"
-        android:text="장소"
-        app:layout_constraintBottom_toTopOf="@+id/btn_new_history"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/info_window"
+        android:layout_width="302dp"
+        android:layout_height="222dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="54dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/info_window" />
 
-    <Button
-        android:id="@+id/btn_new_history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="169dp"
-        android:layout_marginBottom="204dp"
-        android:text="일기 추가"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/btn_newhistory"
+        android:layout_width="107dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="-285dp"
+        android:layout_marginBottom="-170dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/info_window"
+        app:layout_constraintEnd_toStartOf="@+id/info_window"
+        app:srcCompat="@drawable/btn_new_history" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="173dp"
-        android:layout_marginBottom="31dp"
-        android:text="날짜"
-        app:layout_constraintBottom_toTopOf="@+id/place_name"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
