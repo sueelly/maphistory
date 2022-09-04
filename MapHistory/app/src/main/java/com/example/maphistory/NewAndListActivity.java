@@ -240,4 +240,9 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setLatLng(double longitude, double latitude){
+        X = longitude;
+        Y = latitude;
+    }
 }

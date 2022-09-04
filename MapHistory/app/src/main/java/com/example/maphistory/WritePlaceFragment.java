@@ -2,6 +2,9 @@ package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
+
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -109,6 +112,8 @@ public class WritePlaceFragment extends Fragment implements OnMapReadyCallback, 
         googleMap.setPadding(0,0,16,600);
 
         googleMap.setOnMarkerClickListener(marker ->{
+            X = marker.getPosition().longitude;
+            Y = marker.getPosition().latitude;
             SelectedPlaceFragment selectedPlaceFragment1 = new SelectedPlaceFragment();
             return true;
         });

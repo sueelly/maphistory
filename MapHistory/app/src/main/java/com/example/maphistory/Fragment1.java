@@ -1,5 +1,6 @@
 package com.example.maphistory;
 
+import static com.example.maphistory.SelectedPlaceFragment.place_name;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.maphistory.SelectDateFragment.DATE;
@@ -206,12 +207,21 @@ public class Fragment1 extends Fragment {
                     .addToBackStack(null)
                     .commit();
 
+            if(place_name != null){
+                item.address = place_name;
+            }
         });
+
+        if(place_name != null){
+            //item.address = place_name;
+            where.setText(place_name);
+        }
 
         applyItem();
 
         return rootView;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void showDialog(int id) {
         AlertDialog.Builder builder = null;
@@ -486,10 +496,6 @@ public class Fragment1 extends Fragment {
             if (todayDateFormat == null) {
                 todayDateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
             }
-
         }
-
     }
-
-
 }

@@ -38,6 +38,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         selectedPlaceFragment1 = new SelectedPlaceFragment();
                         fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
-
+                        selectedPlaceFragment1.place_name = a;
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     Log.i(TAG, "User canceled autocomplete");
@@ -274,9 +275,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //marker image size setting
         int height = 100;
         int width = 100;
-        BitmapDrawable marker_bitmap_draw = (BitmapDrawable)getResources().getDrawable(R.mipmap.marker_normal);
-        Bitmap b = marker_bitmap_draw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
 
         /**
@@ -287,8 +285,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng)
                     .title(i.titleOfDiary)
-                    .snippet(i.contents)
-                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    .snippet(i.contents);
+                    //.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 //
 //            try {
 //                setPicture(i.getPicture(),10);
@@ -305,11 +303,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if( dateOfNote < 20220612 ) {
                 marker.setAlpha(0.5f);
             }
-
             markers.add(marker);
-
         }
-
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -335,22 +330,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
-<<<<<<< HEAD
-            //marker.showInfoWindow();
-            selectedPlaceFragment1 = new SelectedPlaceFragment();
-            fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
-=======
 
-            marker.showInfoWindow();
-
+            //일기 저장되지 않은 마커 클릭 -> 일기 추가 창
             if( marker.getTag() == null) {
                 selectedPlaceFragment1 = new SelectedPlaceFragment();
-                fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
+                fragmentTransaction1.replace(R.id.fragment_container1, selectedPlaceFragment1).commit();
+                selectedPlaceFragment1.setLatLng(marker);
             }
-
->>>>>>> 8c97657975388093f7f50d4a581ffbbdcc16d942
+            //일기 저장된 마커 클릭 -> 일기 창 띄우기
+            else{
+                marker.showInfoWindow();
+            }
             return true;
-
         });
     }
 
@@ -360,19 +351,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapClick(LatLng point) {
-        //Remove all marker
-//        map.clear();
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
 
-
+        //일기 추가 창이 떠 있으면 닫아주기
+        if (selectedPlaceFragment1 != null) {
+            fragmentTransaction1.remove(fragmentManager1.findFragmentById(R.id.selectedPlaceFragment)).commit();
+            selectedPlaceFragment1 = null;
+        }
         markerOption_clicked.position(point)
                 .alpha(0.8f);
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_normal));
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_normal));
+        //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
         //Animating to zoom the marker
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
         //Add marker
         marker_clicked = map.addMarker(markerOption_clicked);
+
+
     }
 
     /**
