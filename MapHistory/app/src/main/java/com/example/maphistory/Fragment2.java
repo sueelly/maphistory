@@ -96,12 +96,12 @@ public class Fragment2 extends Fragment {
                 Toast.makeText(getContext(), "선택: " +item.getContents(), Toast.LENGTH_SHORT).show();
                 fragmentNew = new Fragment1();
                 fragmentNew.setItem(item);
-
-                NewAndListActivity ad= (NewAndListActivity) getActivity();
-                ad.bottomNavigation.setSelectedItemId(R.id.tab1);
+//
+//                NewAndListActivity ad= (NewAndListActivity) getActivity();
+//                ad.bottomNavigation.setSelectedItemId(R.id.tab1);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragmentNew).commit();
+                        .replace(R.id.container, fragmentNew).addToBackStack(null).commit();
 
 
             }
