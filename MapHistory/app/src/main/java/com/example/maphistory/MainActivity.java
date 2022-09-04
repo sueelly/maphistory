@@ -240,18 +240,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Info 창 설정 ... 나중에
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-//            View window = getLayoutInflater().inflate(R.layout.map_info, null);
+            View window = getLayoutInflater().inflate(R.layout.map_info, null);
             @Nullable
             @Override
             public View getInfoContents(@NonNull Marker marker) {
-//                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
-//                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
-//                        finish();
-//                    }
-//                });
+                Button btn_newHistoryMake = window.findViewById(R.id.btn_newHistoryMake);
+                btn_newHistoryMake.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getApplicationContext(), NewHistoryActivity.class));
+                        finish();
+                    }
+                });
                 return null;
             }
             @Nullable
@@ -298,6 +298,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             Marker marker = map.addMarker(markerOptions2);
             marker.setTag(i);
+
+            // 일기 시점에 따라 투명도 설정으로 구분
+            Note note = (Note) marker.getTag();
+            int dateOfNote = Integer.parseInt(note.createDateStr);
+            if( dateOfNote < 20220612 ) {
+                marker.setAlpha(0.5f);
+            }
+
             markers.add(marker);
 
         }
@@ -327,9 +335,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
+<<<<<<< HEAD
             //marker.showInfoWindow();
             selectedPlaceFragment1 = new SelectedPlaceFragment();
             fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
+=======
+
+            marker.showInfoWindow();
+
+            if( marker.getTag() == null) {
+                selectedPlaceFragment1 = new SelectedPlaceFragment();
+                fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
+            }
+
+>>>>>>> 8c97657975388093f7f50d4a581ffbbdcc16d942
             return true;
 
         });
@@ -344,6 +363,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Remove all marker
 //        map.clear();
         // 나중에 클릭한 장소 정보(이름, 일기 쓰기 버튼 등 뜨게 고치기)
+
+
         markerOption_clicked.position(point)
                 .alpha(0.8f);
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_normal));
@@ -632,6 +653,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            return;
 //        }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    long time = 0;
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - time >= 1000) {
+            time = System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(), "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else if (System.currentTimeMillis() - time < 1000) { // 뒤로 가기 한번 더 눌렀을때의 시간간격 텀이 1초
+            finishAffinity();
+            System.runFinalization();
+            System.exit(0);
+        }
     }
 
 }

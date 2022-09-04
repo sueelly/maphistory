@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -489,4 +490,6 @@ public class Fragment1 extends Fragment {
         }
 
     }
+
+
 }

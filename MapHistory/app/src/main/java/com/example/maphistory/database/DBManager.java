@@ -23,7 +23,7 @@ public class DBManager extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM TABLE_NAME ORDER BY date", null);
 
         if(cursor!=null && cursor.getCount() > 0)
         {
