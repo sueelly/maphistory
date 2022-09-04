@@ -460,6 +460,10 @@ public class Fragment1 extends Fragment {
     public void setItem(Note item) {
         this.item = item;
     }
+    public void setDateItem(Note item, String dateOfItem) {
+        this.item = item;
+        item.createDateStr = dateOfItem;
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void resetting(Note item) {
 

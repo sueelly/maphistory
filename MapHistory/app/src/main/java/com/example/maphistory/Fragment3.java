@@ -52,6 +52,8 @@ public class Fragment3 extends Fragment {
     DBManager dbHelper;
     Context context;
     Fragment1 fragmentNew;
+    String yyyyMMdd;
+    Note item;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +82,12 @@ public class Fragment3 extends Fragment {
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 boolean check = false;
                 check = calendarDays.contains(date);
-                if(check){
+                String mm = setMonthDay(( date.getMonth() +1 )) + "";
+                String yyyy = date.getYear() + "";
+                String dd = setMonthDay(date.getDay()) + "";
+                yyyyMMdd = yyyy +mm + dd ;
 
-                    String mm = setMonthDay(( date.getMonth() +1 )) + "";
-                    String yyyy = date.getYear() + "";
-                    String dd = setMonthDay(date.getDay()) + "";
-                    String yyyyMMdd = yyyy +mm + dd ;
+                if(check){
 
                     int ind = dates.indexOf(date);
 
@@ -97,11 +99,13 @@ public class Fragment3 extends Fragment {
 
                 }
                 else {
-                    Intent intent = new Intent(getContext(), NewAndListActivity.class);
 
-                    Fragment1 fragment1 = new Fragment1();
+                    fragmentNew = new Fragment1();
+                    item = new Note();
+                    fragmentNew.setDateItem(item, yyyyMMdd);
+
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragment1).commit();
+                            .replace(R.id.container, fragmentNew).addToBackStack(null).commit();
 
                 }
             }
