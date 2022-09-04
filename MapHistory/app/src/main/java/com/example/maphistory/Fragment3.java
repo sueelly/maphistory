@@ -93,7 +93,7 @@ public class Fragment3 extends Fragment {
                     fragmentNew.setItem(items.get(ind));
 
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragmentNew).commit();
+                            .replace(R.id.container, fragmentNew).addToBackStack(null).commit();
 
                 }
                 else {
