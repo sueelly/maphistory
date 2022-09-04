@@ -6,10 +6,13 @@
       <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/478878b1f54e0df2c38d58065c95b1f5/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/478878b1f54e0df2c38d58065c95b1f5/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/478878b1f54e0df2c38d58065c95b1f5/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/478878b1f54e0df2c38d58065c95b1f5/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/478878b1f54e0df2c38d58065c95b1f5/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-viewmodel-savedstate/2.3.1/411f92301435123d502de27b6f3262c062f3bd7a/lifecycle-viewmodel-savedstate-2.3.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-viewmodel-savedstate/2.3.1/411f92301435123d502de27b6f3262c062f3bd7a/lifecycle-viewmodel-savedstate-2.3.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
