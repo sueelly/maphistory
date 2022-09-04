@@ -234,9 +234,7 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 //            time = System.currentTimeMillis();
 //            Toast.makeText(getApplicationContext(), "뒤로 가기 버튼을 한 번 더 누르면 지도로 돌아갑니다.", Toast.LENGTH_SHORT).show();
 //        } else if (System.currentTimeMillis() - time < 1000) { // 뒤로 가기 한번 더 눌렀을때의 시간간격 텀이 1초
-//            finishAffinity();
-//            System.runFinalization();
-//            System.exit(0);
+//            onBackPressed();
 //        }
 //    }
 

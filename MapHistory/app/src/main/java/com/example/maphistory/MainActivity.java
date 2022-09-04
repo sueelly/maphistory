@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // A default location (SEOUL) and default zoom
     private final LatLng defaultLocation = new LatLng(37.56, 126.97);
-    private static final int DEFAULT_ZOOM = 16;
+    private static final int DEFAULT_ZOOM = 13;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
 
@@ -271,24 +271,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //zoom control 위치 조정
         googleMap.setPadding(0,0,16,600);
 
-        //marker image size setting
-        int height = 100;
-        int width = 100;
-        BitmapDrawable marker_bitmap_draw = (BitmapDrawable)getResources().getDrawable(R.mipmap.marker_normal);
-        Bitmap b = marker_bitmap_draw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        //처음 시작할 때 위치 설정 -> 가장 최근 History의 위치로
 
 
-        /**
-         * 저장된 일기들에 마커 띄우기
-         */
         for(Note i: items) {
+
             LatLng latlng = new LatLng(Double.parseDouble(i.getLocationY()), Double.parseDouble(i.getLocationX()));
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng)
                     .title(i.titleOfDiary)
-                    .snippet(i.contents)
-                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    .snippet(i.contents);
+
 //
 //            try {
 //                setPicture(i.getPicture(),10);
@@ -296,7 +289,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
 //            }
 
-            Marker marker = map.addMarker(markerOptions2);
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(i.titleOfDiary)
+                    .snippet(i.contents)
+                    .icon(null));
             marker.setTag(i);
 
             // 일기 시점에 따라 투명도 설정으로 구분
@@ -322,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container1, fragmentOpen).commit();
+
             }
         });
 
@@ -331,15 +329,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         marker_history = map.addMarker(markerOption_history);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 13));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
-<<<<<<< HEAD
-            //marker.showInfoWindow();
-            selectedPlaceFragment1 = new SelectedPlaceFragment();
-            fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
-=======
 
             marker.showInfoWindow();
 
@@ -348,10 +342,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 fragmentTransaction1.add(R.id.fragment_container1, selectedPlaceFragment1).commit();
             }
 
->>>>>>> 8c97657975388093f7f50d4a581ffbbdcc16d942
             return true;
 
         });
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
     }
 
     /**
@@ -366,9 +360,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         markerOption_clicked.position(point)
-                .alpha(0.8f);
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_normal));
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                .alpha(0.8f)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         //Animating to zoom the marker
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
         //Add marker
@@ -459,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //현재 위치에 마커 추가.. 나중에
 
                         // 맵 화면 이동
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 13));
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, DEFAULT_ZOOM));
 
                     }else {
                         Log.e(TAG, "Exception: $s", task.getException());
