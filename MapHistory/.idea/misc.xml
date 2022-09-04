@@ -25,13 +25,10 @@
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/menu/menu_main.xml" value="0.2265625" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/xml/external.xml" value="0.359375" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/xml/map_info.xml" value="0.18333333333333332" />
-<<<<<<< HEAD
         <entry key="app/src/main/res/drawable/leftarrow_states.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/marker_states.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.1" />
-=======
->>>>>>> cfe1d394651b4fb1ea1a3a8ca13cab13f7368978
       </map>
     </option>
   </component>
