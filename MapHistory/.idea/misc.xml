@@ -10,19 +10,28 @@
         <entry key="..\:/Users/USER/Desktop/GitMaphistory/maphistory/MapHistory/app/src/main/res/layout/note_item.xml" value="0.23385416666666667" />
         <entry key="..\:/Users/USER/Desktop/GitMaphistory/maphistory/MapHistory/app/src/main/res/menu/menu_main.xml" value="0.359375" />
         <entry key="..\:/Users/USER/Desktop/GitMaphistory/maphistory/MapHistory/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.241" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/drawable-v24/calendar_background.xml" value="0.1835" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/drawable-v24/calendar_not_select_background.xml" value="0.172" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/drawable-v24/calendar_select_background.xml" value="0.172" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/activity_main.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/activity_new_and_list.xml" value="0.23177083333333334" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_1.xml" value="0.23802083333333332" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_3.xml" value="0.2265625" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_selected_place.xml" value="0.23125" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_write_place.xml" value="0.24583333333333332" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_write_place2.xml" value="0.24583333333333332" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/map_info.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/note_item.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/menu/menu_main.xml" value="0.2265625" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/xml/external.xml" value="0.359375" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/xml/map_info.xml" value="0.18333333333333332" />
+        <entry key="app/src/main/res/drawable/leftarrow_states.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/marker_states.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_new_and_list.xml" value="0.14673913043478262" />
-        <entry key="app/src/main/res/layout/fragment_1.xml" value="0.14673913043478262" />
-        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.25832977294921877" />
-        <entry key="app/src/main/res/layout/fragment_write_place.xml" value="0.1322463768115942" />
-        <entry key="app/src/main/res/layout/testfragment.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_write_place.xml" value="0.14945652173913043" />
+        <entry key="app/src/main/res/layout/fragment_write_place2.xml" value="0.14945652173913043" />
+        <entry key="app/src/main/res/layout/history_list.xml" value="0.14945652173913043" />
       </map>
     </option>
   </component>

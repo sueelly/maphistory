@@ -6,18 +6,13 @@ import static com.example.maphistory.Fragment1.date;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Toast;
+import com.example.maphistory.database.DBManager;
 
 import java.util.Calendar;
 
@@ -25,14 +20,20 @@ public class SelectDateFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     public static String DATE="";
+    public static Calendar CALENDER;
+    DBManager dbHelper;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        dbHelper = new DBManager(getActivity(), 1);
+
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
+        CALENDER = c;
 
         return new DatePickerDialog(getActivity(),this,year,month,day);
     }
@@ -45,13 +46,21 @@ public class SelectDateFragment extends DialogFragment
     }
 
     public void processDatePickerResult(int year, int month, int day){
-        String month_string = Integer.toString(month+1);
-        String day_string = Integer.toString(day);
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
         String year_string = Integer.toString(year);
-        String dateMessage = (year_string + "." + month_string + "." + day_string);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
 
         Toast.makeText(getContext(), "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
         DATE = dateMessage;
+
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 
 }

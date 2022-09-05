@@ -1,5 +1,9 @@
 package com.example.maphistory;
 
+import static com.example.maphistory.AppConstants.SAVE_MODIFY;
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -34,15 +38,17 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
     Fragment1 fragment1;
     Fragment2 fragment2;
+    Fragment3 fragment3;
 
     //    public static NoteDatabase mDatabase = null;
     private static final String TAG = "MainActivity";
 
-
+    NavigationBarView bottomNavigation;
     File file;
     Uri uri;
     Bitmap resultPhotoBitmap;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -51,10 +57,11 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment1).commit();
 
-        NavigationBarView bottomNavigation = findViewById(R.id.bottom_navigation);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -68,11 +75,16 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
                     case R.id.tab2:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment2).commit();
                         return true;
+
+                    case R.id.tab3:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment3).commit();
+                        return true;
                 }
 
                 return false;
             }
         });
+        setPicturePath();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
 
@@ -194,15 +206,43 @@ public class NewAndListActivity extends AppCompatActivity implements AutoPermiss
 
     @Override
     public void onDenied(int requestCode, @NotNull String[] permissions) {
-        Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onGranted(int requestCode, @NotNull String[] permissions) {
-        Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setPicturePath() {
+        String folderPath = getFilesDir().getAbsolutePath();
+        AppConstants.FOLDER_PHOTO = folderPath + File.separator + "photo";
 
+        File photoFolder = new File(AppConstants.FOLDER_PHOTO);
+        if (!photoFolder.exists()) {
+            photoFolder.mkdirs();
+        }
+    }
 
+//    long time = 0;
+//
+//    @Override
+//    public void onBackPressed() {
+//
+//        if (System.currentTimeMillis() - time >= 1000) {
+//            time = System.currentTimeMillis();
+//            Toast.makeText(getApplicationContext(), "뒤로 가기 버튼을 한 번 더 누르면 지도로 돌아갑니다.", Toast.LENGTH_SHORT).show();
+//        } else if (System.currentTimeMillis() - time < 1000) { // 뒤로 가기 한번 더 눌렀을때의 시간간격 텀이 1초
+//            finishAffinity();
+//            System.runFinalization();
+//            System.exit(0);
+//        }
+//    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setLatLng(double longitude, double latitude){
+        X = longitude;
+        Y = latitude;
+    }
 }

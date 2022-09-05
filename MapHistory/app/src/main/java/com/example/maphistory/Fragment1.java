@@ -1,11 +1,20 @@
 package com.example.maphistory;
 
+import static com.example.maphistory.SelectedPlaceFragment.place_name;
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+import static com.example.maphistory.SelectDateFragment.DATE;
+import static com.example.maphistory.AppConstants.SAVE_MODIFY;
+import static com.example.maphistory.AppConstants.X;
+import static com.example.maphistory.AppConstants.Y;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,35 +22,52 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.maphistory.database.DBManager;
+import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.pedro.library.AutoPermissions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
+import java.util.zip.Inflater;
 
 public class Fragment1 extends Fragment {
 
@@ -56,16 +82,13 @@ public class Fragment1 extends Fragment {
     ImageButton writePlace;
     DBManager dbHelper;
     Note item;
-
     boolean isPhotoCaptured;
     boolean isPhotoFileSaved;
     boolean isPhotoCanceled;
     File file;
     Bitmap resultPhotoBitmap;
-    Uri uri;
+    Uri fileUri;
     SimpleDateFormat todayDateFormat;
-
-
     SQLiteDatabase database;
     EditText where, title, article;
     ViewGroup rootView;
@@ -81,7 +104,6 @@ public class Fragment1 extends Fragment {
             listener = (OnTabItemSelectedListener) context;
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -91,14 +113,14 @@ public class Fragment1 extends Fragment {
             listener = null;
         }
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
+        dbHelper = new DBManager(getActivity(), 1);
 
-        date = (EditText) rootView.findViewById(R.id.date);
+        date = rootView.findViewById(R.id.date);
         pictureImageView = rootView.findViewById(R.id.pictureImageView);
         where = rootView.findViewById(R.id.where);
         title = rootView.findViewById(R.id.title);
@@ -107,10 +129,8 @@ public class Fragment1 extends Fragment {
         save = rootView.findViewById(R.id.save);
         writePlace = rootView.findViewById(R.id.writePlace);
         camera = rootView.findViewById(R.id.camera);
-
         gallery = rootView.findViewById(R.id.gallery);
-
-        dbHelper = new DBManager(getActivity(), 1);
+        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,46 +139,51 @@ public class Fragment1 extends Fragment {
                 startActivity(intent);
             }
         });
-
         save.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                String picturePath = savePicture();
-                dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
-                        " ", " ", picturePath , article.getText().toString() );
-                Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                dbHelper.getResult();
 
-                Fragment2 fragment2 = new Fragment2();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment2).commit();
+                if(SAVE_MODIFY ==1) {
+                    String picturePath = savePicture();
+                    dbHelper.insert(title.getText().toString(), date.getText().toString(), where.getText().toString(),
+                            X+"", Y+"", picturePath , article.getText().toString() );
+                    Toast.makeText(getActivity(), "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                    dbHelper.getResult();
+
+                    NewAndListActivity ad= (NewAndListActivity) getActivity();
+                    ad.bottomNavigation.setSelectedItemId(R.id.tab2);
+
+                }
+                else if(SAVE_MODIFY ==2) {
+
+                    resetting(item);
+                    dbHelper.modifyNote(item);
+                    Toast.makeText(getActivity(), "일기가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+
+                    NewAndListActivity ad= (NewAndListActivity) getActivity();
+                    ad.bottomNavigation.setSelectedItemId(R.id.tab2);
+                }
 
             }
         });
-
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dbHelper.deleteNote(item);
                 Toast.makeText(getActivity(), "해당 일기가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                Fragment2 fragment2 = new Fragment2();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment2).commit();
+                NewAndListActivity ad= (NewAndListActivity) getActivity();
+                ad.bottomNavigation.setSelectedItemId(R.id.tab2);
 
             }
         });
-
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = new SelectDateFragment();
                 newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
-
             }
         });
-//        imageView = (ImageView) rootView.findViewById(R.id.imageView); // 이거 무조건 setContentView 뒤에 써야함!!!!!!!!!!!!
         pictureImageView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -170,7 +195,6 @@ public class Fragment1 extends Fragment {
                 }
             }
         });
-
         writePlace.setOnClickListener(v ->
         {
             //Initialize fragment
@@ -182,17 +206,16 @@ public class Fragment1 extends Fragment {
                     .replace(R.id.map_container1, wrt_place_fragment)
                     .addToBackStack(null)
                     .commit();
-        });
 
-        // 현재는 수정버튼 대신에 사용 중
-        gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                resetting(item);
-                dbHelper.modifyNote(item);
+            if(place_name != null){
+                item.address = place_name;
             }
         });
+
+        if(place_name != null){
+            //item.address = place_name;
+            where.setText(place_name);
+        }
 
         applyItem();
 
@@ -271,7 +294,6 @@ public class Fragment1 extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
     public void showPhotoCaptureActivity() {
 
         NewAndListActivity activity = (NewAndListActivity) getActivity();
@@ -302,22 +324,19 @@ public class Fragment1 extends Fragment {
 //            startActivityForResult(intent, AppConstants.REQ_PHOTO_CAPTURE);
 //        }
     }
-
     private File createFile() {
         String filename = createFilename();
-//        File storageDir = Environment.getExternalStorageDirectory();
         File outFile = new File(context.getFilesDir(), filename);
 
+//        outFile = Environment.getExternalStorageDirectory();
         return outFile;
     }
-
     private String createFilename() {
         Date curDate = new Date();
         String curDateStr = String.valueOf(curDate.getTime());
 
         return curDateStr;
     }
-
     public void setPicture(String picturePath, int sampleSize) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = sampleSize;
@@ -325,14 +344,12 @@ public class Fragment1 extends Fragment {
 
         pictureImageView.setImageBitmap(resultPhotoBitmap);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void showPhotoSelectionActivity() {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, AppConstants.REQ_PHOTO_SELECTION);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -360,7 +377,7 @@ public class Fragment1 extends Fragment {
                 case AppConstants.REQ_PHOTO_SELECTION:  // 사진을 앨범에서 선택하는 경우
                     Log.d(TAG, "onActivityResult() for REQ_PHOTO_SELECTION.");
 
-                    Uri fileUri = intent.getData();
+                    fileUri = intent.getData();
 
                     ContentResolver resolver = context.getContentResolver();
 
@@ -381,7 +398,6 @@ public class Fragment1 extends Fragment {
             }
         }
     }
-
     public static Bitmap decodeSampledBitmapFromResource(File res, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -399,7 +415,6 @@ public class Fragment1 extends Fragment {
 
         return BitmapFactory.decodeFile(res.getAbsolutePath(), options);
     }
-
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -420,24 +435,19 @@ public class Fragment1 extends Fragment {
         }
         return inSampleSize;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String savePicture() {
         if (resultPhotoBitmap == null) {
             Toast.makeText(context, "No picture", Toast.LENGTH_SHORT).show();
             return "";
         }
-
         File photoFolder = new File(AppConstants.FOLDER_PHOTO);
-
         if(!photoFolder.isDirectory()) {
             Log.d(TAG, "creating photo folder : " + photoFolder);
             photoFolder.mkdirs();
         }
-
         String photoFilename = createFilename();
         String picturePath = photoFolder + File.separator + photoFilename;
-
         try {
             FileOutputStream outstream = new FileOutputStream(picturePath);
             resultPhotoBitmap.compress(Bitmap.CompressFormat.PNG, 100, outstream);
@@ -445,31 +455,36 @@ public class Fragment1 extends Fragment {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
         return picturePath;
     }
-
     public void setItem(Note item) {
         this.item = item;
     }
-
+    public void setDateItem(Note item, String dateOfItem) {
+        this.item = item;
+        item.createDateStr = dateOfItem;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void resetting(Note item) {
+
+        String picturePath = savePicture();
         item.titleOfDiary = title.getText().toString();
         item.createDateStr = date.getText().toString();
         item.address = where.getText().toString();
         item.contents = article.getText().toString();
+        item.picture = picturePath;
 
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void applyItem() {
 
         if (item != null) {
 
+            SAVE_MODIFY = 2;
             title.setText(item.getTitleOfDiary());
             date.setText(item.getCreateDateStr());
             where.setText(item.getAddress());
             article.setText(item.getContents());
-
 
             String picturePath = item.getPicture();
 
@@ -480,14 +495,11 @@ public class Fragment1 extends Fragment {
             }
 
         } else {
-
+            SAVE_MODIFY = 1;
             Date currentDate = new Date();
             if (todayDateFormat == null) {
                 todayDateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
             }
-
         }
-
     }
-
 }

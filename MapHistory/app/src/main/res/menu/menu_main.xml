@@ -17,7 +17,7 @@
         />
     <item
         android:id="@+id/tab3"
-        android:title="탭1"
+        android:title="캘린더"
         app:showAsAction="always"
         android:enabled="true"
         />

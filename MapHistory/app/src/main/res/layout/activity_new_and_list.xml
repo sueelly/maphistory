@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:id="@+id/container"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     </FrameLayout>
 
     <!--위치 추가할 때 뜨는 프래그먼트 넣을 거-->

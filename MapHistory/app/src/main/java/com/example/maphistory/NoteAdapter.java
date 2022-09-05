@@ -1,6 +1,8 @@
 package com.example.maphistory;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maphistory.database.DBManager;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements OnNoteItemClickListener {
@@ -21,6 +24,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     DBManager dbHelper;
     ArrayList<Note> items = new ArrayList<Note>();
     OnNoteItemClickListener listener;
+    private Context context;
 
     @NonNull
     @Override
@@ -41,9 +45,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     }
 
     public NoteAdapter(Context context) {
+        this.context = context;
         dbHelper = new DBManager(context, 1);
         items = dbHelper.loadNoteList();
-
 
     }
 
@@ -81,6 +85,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         LinearLayout layout1;
         ImageView pictureImageView;
         TextView titleTextView, contentsTextView, locationTextView, dateTextView;
+        private Context context;
 
         public ViewHolder(@NonNull View itemView, final OnNoteItemClickListener listener) {
             super(itemView);
@@ -109,14 +114,25 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         public void setItem(Note item) {
 
             String picturePath = item.getPicture();
+
             if (picturePath != null && !picturePath.equals("")) {
                 pictureImageView.setVisibility(View.VISIBLE);
-                pictureImageView.setImageResource(R.drawable.ic_info);
-            }
+                pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
 
-            contentsTextView.setText(item.getTitleOfDiary());
+            } else {
+                pictureImageView.setVisibility(View.GONE);
+                pictureImageView.setImageResource(R.drawable.picture1);
+
+            }
+//
+//            InputStream in = context.getContentResolver().openInputStream(picturePath);
+//            Bitmap bitmap = BitmapFactory.decodeStream(in);
+//            pictureImageView.setImageBitmap(bitmap);
+
+            contentsTextView.setText(item.getContents());
             locationTextView.setText((item.getAddress()));
             dateTextView.setText(item.getCreateDateStr());
+            titleTextView.setText(item.getTitleOfDiary());
 
         }
     }
