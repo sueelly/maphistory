@@ -94,12 +94,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private CameraPosition cameraPosition;
     private Place place;
-    Note item;
+    Note item, item2;
     ArrayList<Note> items = new ArrayList<Note>();
     private final List<Marker> markers = new ArrayList<Marker>();
     DBManager dbHelper;
     Fragment1 fragmentOpen= null;
     Bitmap photoBitmap;
+    int itemNum;
+    Marker marker;
 
     private View mapPanel;
     private MarkerOptions markerOption_clicked;
@@ -265,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getLocationPermission();
         updateLocationUI();
-        //getDeviceLocation();
 
         //zoom in/out 버튼 사용 가능
         UiSettings uiSettings = this.map.getUiSettings();
@@ -295,13 +296,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
 //            }
 
-            Marker marker = map.addMarker(markerOptions2);
+            marker = map.addMarker(markerOptions2);
             marker.setTag(i);
 
             if( items.indexOf(i) == items.size() - 1 ) {
+                itemNum = items.indexOf(i);
                 marker.showInfoWindow();
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
+                currentLocation();
             }
+
 
             // 일기 시점에 따라 투명도 설정으로 구분
             Note note = (Note) marker.getTag();
@@ -339,8 +343,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             else{
                 marker.showInfoWindow();
             }
+
             return true;
         });
+
+//        getDeviceLocation();
+
     }
 
     /**
@@ -414,10 +422,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.leftArrowButton:
                         //Left Button -> 이전 History로 이동 index - 1
                         //일기 미리보기 창이 떠 있을 때만 ?
+
+                        leftMarker(marker);
+
                         break;
 
                     case R.id.rightArrowButton:
                         //right Button -> 다음 History로 이동
+
+                        rightMarker(marker);
+
                         break;
                 }
             }
@@ -428,6 +442,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_leftArrow.setOnClickListener(Listener);
         btn_rightArrow.setOnClickListener(Listener);
     }
+
+    private void leftMarker(Marker marker) {
+
+        if(itemNum !=0) {
+            LatLng latlng2 = new LatLng(Double.parseDouble
+                    (items.get(itemNum-1).getLocationY()),
+                    Double.parseDouble(items.get(itemNum-1).getLocationX()));
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng2)
+                    .title(items.get(itemNum-1).titleOfDiary)
+                    .snippet(items.get(itemNum-1).contents);
+
+            marker = map.addMarker(markerOptions2);
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
+            marker.showInfoWindow();
+
+            itemNum -= 1;
+        }
+        else
+            Toast.makeText(this, "가장 오래된 일기입니다.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void rightMarker(Marker marker) {
+
+        if(itemNum != items.size() -1) {
+            LatLng latlng2 = new LatLng(Double.parseDouble
+                    (items.get(itemNum+1).getLocationY()),
+                    Double.parseDouble(items.get(itemNum+1).getLocationX()));
+
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng2)
+                    .title(items.get(itemNum+1).titleOfDiary)
+                    .snippet(items.get(itemNum+1).contents);
+
+            marker = map.addMarker(markerOptions2);
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
+            marker.showInfoWindow();
+
+            itemNum += 1;
+        }
+        else
+            Toast.makeText(this, "가장 최근 일기입니다.", Toast.LENGTH_SHORT).show();
+
+    }
+
+
 
     /**
      * 디바이스 현재 위치 가져와서 보여주기
@@ -455,10 +518,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FindCurrentPlaceResponse likelyPlaces = task.getResult();
 
                         deviceLocation = likelyPlaces.getPlaceLikelihoods().get(0).getPlace().getLatLng();
-                        //현재 위치에 마커 추가.. 나중에
+                        //현재 위치 위경도 저장 (default 값)
+                        X = deviceLocation.longitude;
+                        Y = deviceLocation.latitude;
 
                         // 맵 화면 이동
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 13));
+//                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 13));
 
                     }else {
                         Log.e(TAG, "Exception: $s", task.getException());
@@ -501,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
          */
         try{
             if (locationPermissionGranted) {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
 
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -510,6 +575,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()) {
                             // camera 위치를 현재 위치로 설정
                             lastKnownLocation = task.getResult();
+                            X = lastKnownLocation.getLongitude();
                             if(lastKnownLocation != null){
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
@@ -526,6 +592,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
+            Toast.makeText(this, " ", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -560,6 +627,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (locationPermissionGranted) {
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
+
             } else {
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(false);

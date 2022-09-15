@@ -132,6 +132,13 @@ public class Fragment1 extends Fragment {
         gallery = rootView.findViewById(R.id.gallery);
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
 
+        // 기본값 오늘 날짜
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        date.setText(setToday(year, month, day));
+
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -501,5 +508,22 @@ public class Fragment1 extends Fragment {
                 todayDateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
             }
         }
+    }
+
+    public String setToday(int year, int month, int day){
+
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
+        String year_string = Integer.toString(year);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
+
+        return DATE = dateMessage;
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 }
