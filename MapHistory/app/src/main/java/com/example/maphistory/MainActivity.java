@@ -4,6 +4,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static com.example.maphistory.AppConstants.X;
 import static com.example.maphistory.AppConstants.Y;
+import static com.example.maphistory.SelectDateFragment.DATE;
 
 import static java.lang.System.in;
 
@@ -82,6 +83,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .snippet(selected_place.getAddress())
                                 .alpha(0.8f)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        m1.showInfoWindow();
 
                         X = selected_place.getLatLng().longitude;
                         Y = selected_place.getLatLng().latitude;
@@ -286,8 +289,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng latlng = new LatLng(Double.parseDouble(i.getLocationY()), Double.parseDouble(i.getLocationX()));
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng)
-                    .title(i.titleOfDiary)
-                    .snippet(i.contents);
+                    .title(i.address)
+                    .snippet(i.titleOfDiary);
                     //.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 //
 //            try {
@@ -306,13 +309,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 currentLocation();
             }
 
+            //1주, 1달, 3달, 6달 날짜 set
+            final Calendar c = Calendar.getInstance();
 
-            // 일기 시점에 따라 투명도 설정으로 구분
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.DATE, -7);
+            int year_7 = c.get(Calendar.YEAR);
+            int month_7 = c.get(Calendar.MONTH);
+            int day_7 = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -1);
+            int year_1m = c.get(Calendar.YEAR);
+            int month_1m = c.get(Calendar.MONTH);
+            int day_1m = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -3);
+            int year_3m = c.get(Calendar.YEAR);
+            int month_3m = c.get(Calendar.MONTH);
+            int day_3m = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -6);
+            int year_6m = c.get(Calendar.YEAR);
+            int month_6m = c.get(Calendar.MONTH);
+            int day_6m = c.get(Calendar.DAY_OF_MONTH);
+
+            String today = setToday(year, month, day);
+            String a_week_ago = setToday(year_7, month_7, day_7);
+            String a_month_ago = setToday(year_1m, month_1m, day_1m);
+            String three_month_ago = setToday(year_3m, month_3m, day_3m);
+            String six_month_ago = setToday(year_6m, month_6m, day_6m);
+
+            // 일기 시점에 따라 투명도 설정으로 구분 (1주, 1달, 3달, 6달)
             Note note = (Note) marker.getTag();
             int dateOfNote = Integer.parseInt(note.createDateStr);
-            if( dateOfNote < 20220612 ) {
+            if( dateOfNote > Integer.parseInt(a_week_ago) ) {
+                marker.setAlpha(0.9f);
+            }
+            else if (dateOfNote > Integer.parseInt(a_month_ago)) {
+                marker.setAlpha(0.7f);
+            }
+            else if( dateOfNote > Integer.parseInt(three_month_ago)) {
                 marker.setAlpha(0.5f);
             }
+            else if( dateOfNote > Integer.parseInt(six_month_ago) ) {
+                marker.setAlpha(0.3f);
+            }
+
             markers.add(marker);
         }
 
@@ -349,6 +394,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 //        getDeviceLocation();
 
+    }
+
+    public String setToday(int year, int month, int day){
+
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
+        String year_string = Integer.toString(year);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
+
+        return DATE = dateMessage;
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 
     /**
@@ -451,10 +513,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Double.parseDouble(items.get(itemNum-1).getLocationX()));
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng2)
-                    .title(items.get(itemNum-1).titleOfDiary)
-                    .snippet(items.get(itemNum-1).contents);
+                    .title(items.get(itemNum-1).address)
+                    .snippet(items.get(itemNum-1).titleOfDiary);
 
             marker = map.addMarker(markerOptions2);
+
+            marker.setAlpha(0.0f);
 
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
             marker.showInfoWindow();
@@ -475,10 +539,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng2)
-                    .title(items.get(itemNum+1).titleOfDiary)
-                    .snippet(items.get(itemNum+1).contents);
+                    .title(items.get(itemNum+1).address)
+                    .snippet(items.get(itemNum+1).titleOfDiary);
 
             marker = map.addMarker(markerOptions2);
+
+            marker.setAlpha(0.0f);
 
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
             marker.showInfoWindow();
@@ -619,6 +685,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
+    @SuppressLint("MissingPermission")
     private void updateLocationUI() {
         if (map == null) {
             return;
