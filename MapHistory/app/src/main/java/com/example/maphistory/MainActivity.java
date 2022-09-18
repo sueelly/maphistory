@@ -278,9 +278,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setPadding(0,0,16,600);
 
         //marker image size setting
-        int height = 100;
-        int width = 100;
-
+        int height = 200;
+        int width = 200;
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.marker_normal);
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
 
         /**
          * 저장된 일기들에 마커 띄우기
@@ -290,8 +292,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng)
                     .title(i.address)
-                    .snippet(i.titleOfDiary);
-                    //.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    .snippet(i.titleOfDiary)
+                    .icon(smallMarkerIcon);
 //
 //            try {
 //                setPicture(i.getPicture(),10);
@@ -517,6 +519,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .snippet(items.get(itemNum-1).titleOfDiary);
 
             marker = map.addMarker(markerOptions2);
+            marker.setTag(items.get(itemNum-1));
+
+            map.setOnMarkerClickListener(marker2 -> {
+                marker2.getTag();
+                marker2.showInfoWindow();
+                return true;
+            });
 
             marker.setAlpha(0.0f);
 
@@ -543,6 +552,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .snippet(items.get(itemNum+1).titleOfDiary);
 
             marker = map.addMarker(markerOptions2);
+            marker.setTag(items.get(itemNum+1));
+
+            map.setOnMarkerClickListener(marker2 -> {
+                marker2.getTag();
+                marker2.showInfoWindow();
+                return true;
+            });
 
             marker.setAlpha(0.0f);
 
@@ -555,8 +571,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, "가장 최근 일기입니다.", Toast.LENGTH_SHORT).show();
 
     }
-
-
 
     /**
      * 디바이스 현재 위치 가져와서 보여주기
