@@ -76,7 +76,7 @@ public class WritePlaceFragment extends Fragment implements OnMapReadyCallback, 
     private Place selected_place;
     private SelectedPlaceFragment selectedPlaceFragment1;
     final String apiKey = BuildConfig.MAPS_API_KEY;
-    
+
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
@@ -186,6 +186,12 @@ public class WritePlaceFragment extends Fragment implements OnMapReadyCallback, 
             X = marker.getPosition().longitude;
             Y = marker.getPosition().latitude;
             SelectedPlaceFragment selectedPlaceFragment1 = new SelectedPlaceFragment();
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.map_container2, selectedPlaceFragment1)
+                    .addToBackStack(null)
+                    .commit();
 
             return true;
         });

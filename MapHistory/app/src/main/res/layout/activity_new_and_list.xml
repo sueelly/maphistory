@@ -14,11 +14,19 @@
 
     </FrameLayout>
 
-    <!--위치 추가할 때 뜨는 프래그먼트 넣을 거-->
+    <!--위치 추가할 때 뜨는 프래그먼트 writePlaceFragment 넣을 거-->
+    <FrameLayout
+        android:id="@+id/map_container1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:layout_editor_absoluteY="82dp"></FrameLayout>
+
+    <!--writePlaceFragment 안에 selectedplaceFragment 넣을 거-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map_container1"
+        android:id="@+id/map_container2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </FrameLayout>
 

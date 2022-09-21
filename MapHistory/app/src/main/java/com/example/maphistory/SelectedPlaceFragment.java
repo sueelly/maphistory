@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +20,11 @@ import com.google.android.gms.maps.model.Marker;
 public class SelectedPlaceFragment extends Fragment {
 
     ViewGroup rootView;
-    public static String place_name;
+    ImageView btn_new_history;
     TextView selectedPlace;
-    String place = null;
+    public static String place_name; // note 에 저장할 장소 이름
+
+    String place = null; // fragment 위에 띄울 장소 이름
 
     public SelectedPlaceFragment(String place){
         this.place = place;
@@ -38,13 +38,11 @@ public class SelectedPlaceFragment extends Fragment {
 
          rootView = (ViewGroup) inflater.inflate(R.layout.fragment_selected_place, container, false);
 
-        ImageView btn_new_history = (ImageView) rootView.findViewById(R.id.btn_newhistory);
 
-        btn_new_history.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), NewAndListActivity.class));
-        });
+
 
         initComponent();
+        setClickListener(1);
         setPlace();
 
         return rootView;
@@ -57,8 +55,24 @@ public class SelectedPlaceFragment extends Fragment {
     }
 
     public void initComponent() {
+        btn_new_history = (ImageView) rootView.findViewById(R.id.btn_newhistory);
         selectedPlace = (TextView) rootView.findViewById(R.id.selectedPlaceName);
     }
+
+    public void setClickListener(int fragment){
+        //main activity 에서의 이벤트
+        if(fragment == 1)
+        {
+            btn_new_history.setOnClickListener(v -> {
+                startActivity(new Intent(getActivity(), NewAndListActivity.class));
+            });
+        }
+        //writePlace fragment 에서의 이벤트
+        else if(fragment == 2) {
+
+        }
+    }
+
     public void setPlace() {
         selectedPlace.setText(this.place);
     }

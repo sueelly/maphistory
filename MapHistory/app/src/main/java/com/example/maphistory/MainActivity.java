@@ -5,6 +5,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static com.example.maphistory.AppConstants.X;
 import static com.example.maphistory.AppConstants.Y;
+import static com.example.maphistory.SelectedPlaceFragment.place_name;
+
 
 import static java.lang.System.in;
 
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(history_latlng, DEFAULT_ZOOM));
 
                         selectedPlaceFragment1 = new SelectedPlaceFragment(a);
+                        selectedPlaceFragment1.place_name = a;
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container1, selectedPlaceFragment1)
                                 .commit();
@@ -367,6 +370,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             fragmentTransaction1.replace(R.id.fragment_container1, fragment).commit();
             selectedPlaceFragment1 = null;
         }
+        if(fragment != null)
+            fragment = null;
+
         markerOption_clicked.position(point)
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));

@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
 
-public class Fragment1<d> extends Fragment {
+public class Fragment1 extends Fragment {
 
     private static final String TAG = "Fragment1";
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
