@@ -38,7 +38,6 @@ public class Fragment2 extends Fragment {
     SimpleDateFormat todayDateFormat;
     Fragment1 fragmentNew;
 
-
     public void onAttach(Context context) {
 
         super.onAttach(context);
@@ -66,6 +65,7 @@ public class Fragment2 extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         writeNewDiary = rootView.findViewById(R.id.writeNewDiary);
+
         writeNewDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

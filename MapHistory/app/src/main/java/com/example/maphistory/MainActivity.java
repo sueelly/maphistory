@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maphistory.database.DBManager;
@@ -81,6 +82,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -102,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     DBManager dbHelper;
     Fragment1 fragmentOpen= null;
     Bitmap photoBitmap;
+    //History Fragment - fragment, textViews
+    HistoryFragment historyFragment = null;
+    TextView titleOfHst, contentsOfHst, placeOfHst;
     int itemNum;
     Marker marker;
 
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng history_latlng;
 
     // info fragment about places
-    private SelectedPlaceFragment selectedPlaceFragment1;
+    private SelectedPlaceFragment selectedPlaceFragment1 = null;
     private FragmentManager fragmentManager1;
     private FragmentTransaction fragmentTransaction1;
 
@@ -173,11 +178,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String a = selected_place.getName();
                         addressField.setHint(a);
 
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(selected_place.getLatLng(), DEFAULT_ZOOM));
+                        history_latlng = new LatLng(selected_place.getLatLng().latitude + 0.0012,
+                                selected_place.getLatLng().longitude);
 
-                        selectedPlaceFragment1 = new SelectedPlaceFragment();
-                        fragmentTransaction1.replace(R.id.fragment_container1, selectedPlaceFragment1).commit();
-                        selectedPlaceFragment1.place_name = a;
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(history_latlng, DEFAULT_ZOOM));
+
+                        selectedPlaceFragment1 = new SelectedPlaceFragment(a);
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container1, selectedPlaceFragment1)
+                                .commit();
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     Log.i(TAG, "User canceled autocomplete");
@@ -228,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         dbHelper = new DBManager(getApplicationContext(), 1);
         items = dbHelper.loadNoteList();
-
 
         /**
          * map style 지정
@@ -307,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if( items.indexOf(i) == items.size() - 1 ) {
                 itemNum = items.indexOf(i);
                 marker.showInfoWindow();
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latlng.latitude+0.005, latlng.longitude), 13));
                 currentLocation();
             }
 
@@ -369,11 +377,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 item = (Note) marker.getTag();
                 Toast.makeText(getApplicationContext(), item.titleOfDiary, Toast.LENGTH_SHORT).show();
 
-                fragmentOpen = new Fragment1();
-                fragmentOpen.setItem(item);
-
+                historyFragment = new HistoryFragment(item);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container1, fragmentOpen).commit();
+                        .replace(R.id.fragment_container2, historyFragment)
+                        .commit();
             }
         });
 
@@ -383,7 +390,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //일기 저장되지 않은 마커 클릭 -> 일기 추가 창
             if( marker.getTag() == null) {
                 selectedPlaceFragment1 = new SelectedPlaceFragment();
-                fragmentTransaction1.replace(R.id.fragment_container1, selectedPlaceFragment1).commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container1, selectedPlaceFragment1)
+                        .commit();
                 selectedPlaceFragment1.setLatLng(marker);
             }
             //일기 저장된 마커 클릭 -> 일기 창 띄우기
@@ -425,10 +434,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Fragment fragment = new Fragment();
 
         //일기 추가 창이 떠 있으면 닫아주기
-        if (fragmentOpen != null) {
-            fragmentTransaction1.replace(R.id.fragment_container1, fragment).commit();
-            fragmentOpen = null;
+        if (historyFragment != null) {
+            fragmentTransaction1.replace(R.id.fragment_container2, fragment).commit();
+            historyFragment = null;
         }
+
         if (selectedPlaceFragment1 != null) {
             fragmentTransaction1.replace(R.id.fragment_container1, fragment).commit();
             selectedPlaceFragment1 = null;
@@ -438,8 +448,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
         //Animating to zoom the marker
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(point, DEFAULT_ZOOM));
-        //Add marker
+        LatLng latlng = new LatLng(point.latitude + 0.0012, point.longitude );
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));        //Add marker
         marker_clicked = map.addMarker(markerOption_clicked);
     }
 

@@ -48,13 +48,6 @@ public class DBManager extends SQLiteOpenHelper {
         return items;
     }
 
-
-    // Person Table 생성
-//    @Override
-//    public void onCreate(SQLiteDatabase db) {
-//        db.execSQL("CREATE TABLE TABLE_NAME(name TEXT, Age INT, ADDR TEXT)");
-//    }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE TABLE_NAME( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, address TEXT, locationX TEXT, locationY TEXT, picture TEXT, contents TEXT)");
@@ -80,14 +73,6 @@ public class DBManager extends SQLiteOpenHelper {
                 "'"+ contents + "')");
 //        db.close();
     }
-
-//    // Person Table 데이터 수정
-//    public void Update(String name, int age, String Addr) {
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("UPDATE TABLE_NAME SET age = " + age + ", ADDR = '" + Addr + "'" + " WHERE NAME = '" + name + "'");
-//        db.close();
-//    }
-//
 
     public void modifyNote(Note item) {
         if (item != null) {
