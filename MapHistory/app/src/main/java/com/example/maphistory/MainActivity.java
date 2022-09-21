@@ -1,4 +1,4 @@
-//9-21 merge test!!!!!!!!!!
+//뭐가 뭔지 모르겠어!!!
 package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
