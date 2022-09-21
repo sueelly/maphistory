@@ -10,12 +10,10 @@
         android:id="@+id/info_window"
         android:layout_width="302dp"
         android:layout_height="222dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="54dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/info_window" />
@@ -24,11 +22,34 @@
         android:id="@+id/btn_newhistory"
         android:layout_width="107dp"
         android:layout_height="42dp"
-        android:layout_marginEnd="-285dp"
-        android:layout_marginBottom="-170dp"
+        android:layout_marginStart="-355dp"
+        android:layout_marginEnd="-355dp"
+        android:layout_marginBottom="-150dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/info_window"
         app:layout_constraintEnd_toStartOf="@+id/info_window"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/btn_new_history" />
+
+    <TextView
+        android:id="@+id/selectedPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-200dp"
+        android:layout_marginTop="-170dp"
+        android:text="장소"
+        app:layout_constraintStart_toEndOf="@+id/info_window"
+        app:layout_constraintTop_toBottomOf="@+id/info_window" />
+
+    <TextView
+        android:id="@+id/selectedPlaceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="-170dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/selectedPlace"
+        app:layout_constraintTop_toBottomOf="@+id/info_window" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

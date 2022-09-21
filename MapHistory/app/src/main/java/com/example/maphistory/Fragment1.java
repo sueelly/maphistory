@@ -55,7 +55,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.pedro.library.AutoPermissions;
+//import com.pedro.library.AutoPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
 
-public class Fragment1 extends Fragment {
+public class Fragment1<d> extends Fragment {
 
     private static final String TAG = "Fragment1";
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -95,7 +95,7 @@ public class Fragment1 extends Fragment {
     DatePickerDialog datePickerDialog;
     FloatingActionButton floatingActionButton;
     public static EditText date;
-
+    
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

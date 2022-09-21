@@ -28,7 +28,8 @@
         <entry key="app/src/main/res/drawable/leftarrow_states.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/marker_states.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.24072265625000003" />
+        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_write_place.xml" value="0.14945652173913043" />
         <entry key="app/src/main/res/layout/fragment_write_place2.xml" value="0.14945652173913043" />
         <entry key="app/src/main/res/layout/history_list.xml" value="0.14945652173913043" />
