@@ -1,4 +1,4 @@
-//9-21 merge test!!!!!!!!!!
+//9/21 jdh branch test
 package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
