@@ -7,13 +7,11 @@
       <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/4bc5fd6ddfbee31cf5c815ea16e54d12/transformed/jetified-AutoPermissions-1.0.3/res" />
       <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/4bc5fd6ddfbee31cf5c815ea16e54d12/transformed/jetified-AutoPermissions-1.0.3/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/4bc5fd6ddfbee31cf5c815ea16e54d12/transformed/jetified-AutoPermissions-1.0.3/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/e03b54b3673d6a2e3b18eef3b09fd712/transformed/jetified-AutoPermissions-1.0.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/e03b54b3673d6a2e3b18eef3b09fd712/transformed/jetified-AutoPermissions-1.0.3/res" />
-      <root url="file://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/transforms-3/e03b54b3673d6a2e3b18eef3b09fd712/transformed/jetified-AutoPermissions-1.0.3/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/Android_DaumMap_SDK_1.4.1.0/caches/modules-2/metadata-2.17/descriptors/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/caches/modules-2/files-2.1/com.github.pedroSG94/AutoPermissions/1.0.3/2ebf1f8c889014172e9cec70b36292fc497e4ad4/AutoPermissions-1.0.3-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.pedroSG94/AutoPermissions/1.0.3/2ebf1f8c889014172e9cec70b36292fc497e4ad4/AutoPermissions-1.0.3-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

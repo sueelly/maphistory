@@ -17,6 +17,7 @@
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/activity_new_and_list.xml" value="0.23177083333333334" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_1.xml" value="0.23802083333333332" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_3.xml" value="0.2265625" />
+        <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_history.xml" value="0.2234375" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_selected_place.xml" value="0.23125" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_write_place.xml" value="0.24583333333333332" />
         <entry key="..\:/Users/USER/Desktop/ShareMaphistory/maphistory/MapHistory/app/src/main/res/layout/fragment_write_place2.xml" value="0.24583333333333332" />
@@ -28,10 +29,7 @@
         <entry key="app/src/main/res/drawable/leftarrow_states.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/marker_states.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_new_and_list.xml" value="0.1322463768115942" />
-        <entry key="app/src/main/res/layout/fragment_1.xml" value="0.1322463768115942" />
-        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.24072265625000003" />
-        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_selected_place.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_write_place.xml" value="0.14945652173913043" />
         <entry key="app/src/main/res/layout/fragment_write_place2.xml" value="0.14945652173913043" />
         <entry key="app/src/main/res/layout/history_list.xml" value="0.14945652173913043" />

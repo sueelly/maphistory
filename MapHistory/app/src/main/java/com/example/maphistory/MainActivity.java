@@ -1,12 +1,10 @@
-//뭐가 뭔지 모르겠어!!!
 package com.example.maphistory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static com.example.maphistory.AppConstants.X;
 import static com.example.maphistory.AppConstants.Y;
-import static com.example.maphistory.SelectedPlaceFragment.place_name;
-
+import static com.example.maphistory.SelectDateFragment.DATE;
 
 import static java.lang.System.in;
 
@@ -84,8 +82,10 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private CameraPosition cameraPosition;
     private Place place;
-    Note item;
+    Note item, item2;
     ArrayList<Note> items = new ArrayList<Note>();
     private final List<Marker> markers = new ArrayList<Marker>();
     DBManager dbHelper;
@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //History Fragment - fragment, textViews
     HistoryFragment historyFragment = null;
     TextView titleOfHst, contentsOfHst, placeOfHst;
+    int itemNum;
+    Marker marker;
 
     private View mapPanel;
     private MarkerOptions markerOption_clicked;
@@ -168,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .snippet(selected_place.getAddress())
                                 .alpha(0.8f)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        m1.showInfoWindow();
 
                         X = selected_place.getLatLng().longitude;
                         Y = selected_place.getLatLng().latitude;
@@ -181,11 +184,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(history_latlng, DEFAULT_ZOOM));
 
                         selectedPlaceFragment1 = new SelectedPlaceFragment(a);
-                        selectedPlaceFragment1.place_name = a;
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container1, selectedPlaceFragment1)
                                 .commit();
-
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     Log.i(TAG, "User canceled autocomplete");
@@ -237,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         dbHelper = new DBManager(getApplicationContext(), 1);
         items = dbHelper.loadNoteList();
 
-
         /**
          * map style 지정
          */
@@ -278,13 +278,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getLocationPermission();
         updateLocationUI();
-        //getDeviceLocation();
 
         //zoom in/out 버튼 사용 가능
         UiSettings uiSettings = this.map.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         //zoom control 위치 조정
         googleMap.setPadding(0,0,16,600);
+
+        //marker image size setting
+        int height = 200;
+        int width = 200;
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.marker_normal);
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
 
         /**
          * 저장된 일기들에 마커 띄우기
@@ -293,9 +299,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng latlng = new LatLng(Double.parseDouble(i.getLocationY()), Double.parseDouble(i.getLocationX()));
             MarkerOptions markerOptions2 = new MarkerOptions();
             markerOptions2.position(latlng)
-                    .title(i.titleOfDiary)
-                    .snippet(i.contents);
-                    //.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    .title(i.address)
+                    .snippet(i.titleOfDiary)
+                    .icon(smallMarkerIcon);
 //
 //            try {
 //                setPicture(i.getPicture(),10);
@@ -303,20 +309,65 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
 //            }
 
-            Marker marker = map.addMarker(markerOptions2);
+            marker = map.addMarker(markerOptions2);
             marker.setTag(i);
 
             if( items.indexOf(i) == items.size() - 1 ) {
+                itemNum = items.indexOf(i);
                 marker.showInfoWindow();
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latlng.latitude+0.005, latlng.longitude), 13));
+                currentLocation();
             }
 
-            // 일기 시점에 따라 투명도 설정으로 구분
+            //1주, 1달, 3달, 6달 날짜 set
+            final Calendar c = Calendar.getInstance();
+
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.DATE, -7);
+            int year_7 = c.get(Calendar.YEAR);
+            int month_7 = c.get(Calendar.MONTH);
+            int day_7 = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -1);
+            int year_1m = c.get(Calendar.YEAR);
+            int month_1m = c.get(Calendar.MONTH);
+            int day_1m = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -3);
+            int year_3m = c.get(Calendar.YEAR);
+            int month_3m = c.get(Calendar.MONTH);
+            int day_3m = c.get(Calendar.DAY_OF_MONTH);
+
+            c.add(c.MONTH, -6);
+            int year_6m = c.get(Calendar.YEAR);
+            int month_6m = c.get(Calendar.MONTH);
+            int day_6m = c.get(Calendar.DAY_OF_MONTH);
+
+            String today = setToday(year, month, day);
+            String a_week_ago = setToday(year_7, month_7, day_7);
+            String a_month_ago = setToday(year_1m, month_1m, day_1m);
+            String three_month_ago = setToday(year_3m, month_3m, day_3m);
+            String six_month_ago = setToday(year_6m, month_6m, day_6m);
+
+            // 일기 시점에 따라 투명도 설정으로 구분 (1주, 1달, 3달, 6달)
             Note note = (Note) marker.getTag();
             int dateOfNote = Integer.parseInt(note.createDateStr);
-            if( dateOfNote < 20220612 ) {
+            if( dateOfNote > Integer.parseInt(a_week_ago) ) {
+                marker.setAlpha(0.9f);
+            }
+            else if (dateOfNote > Integer.parseInt(a_month_ago)) {
+                marker.setAlpha(0.7f);
+            }
+            else if( dateOfNote > Integer.parseInt(three_month_ago)) {
                 marker.setAlpha(0.5f);
             }
+            else if( dateOfNote > Integer.parseInt(six_month_ago) ) {
+                marker.setAlpha(0.3f);
+            }
+
             markers.add(marker);
         }
 
@@ -327,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), item.titleOfDiary, Toast.LENGTH_SHORT).show();
 
                 historyFragment = new HistoryFragment(item);
-
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container2, historyFragment)
                         .commit();
@@ -336,6 +386,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // marker click event -> info 뜨게
         map.setOnMarkerClickListener(marker -> {
+
             //일기 저장되지 않은 마커 클릭 -> 일기 추가 창
             if( marker.getTag() == null) {
                 selectedPlaceFragment1 = new SelectedPlaceFragment();
@@ -348,8 +399,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             else{
                 marker.showInfoWindow();
             }
+
             return true;
         });
+
+//        getDeviceLocation();
+
+    }
+
+    public String setToday(int year, int month, int day){
+
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
+        String year_string = Integer.toString(year);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
+
+        return DATE = dateMessage;
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 
     /**
@@ -366,21 +438,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             fragmentTransaction1.replace(R.id.fragment_container2, fragment).commit();
             historyFragment = null;
         }
+
         if (selectedPlaceFragment1 != null) {
             fragmentTransaction1.replace(R.id.fragment_container1, fragment).commit();
             selectedPlaceFragment1 = null;
         }
-        if(fragment != null)
-            fragment = null;
-
         markerOption_clicked.position(point)
                 .alpha(0.8f)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
         //Animating to zoom the marker
         LatLng latlng = new LatLng(point.latitude + 0.0012, point.longitude );
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));
-        //Add marker
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));        //Add marker
         marker_clicked = map.addMarker(markerOption_clicked);
     }
 
@@ -427,11 +496,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.leftArrowButton:
                         //Left Button -> 이전 History로 이동 index - 1
                         //일기 미리보기 창이 떠 있을 때만 ?
+
+                        leftMarker(marker);
+
                         break;
 
                     case R.id.rightArrowButton:
                         //right Button -> 다음 History로 이동
-                        currentLocation();
+
+                        rightMarker(marker);
 
                         break;
                 }
@@ -442,6 +515,71 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_mapHistory.setOnClickListener(Listener);
         btn_leftArrow.setOnClickListener(Listener);
         btn_rightArrow.setOnClickListener(Listener);
+    }
+
+    private void leftMarker(Marker marker) {
+
+        if(itemNum !=0) {
+            LatLng latlng2 = new LatLng(Double.parseDouble
+                    (items.get(itemNum-1).getLocationY()),
+                    Double.parseDouble(items.get(itemNum-1).getLocationX()));
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng2)
+                    .title(items.get(itemNum-1).address)
+                    .snippet(items.get(itemNum-1).titleOfDiary);
+
+            marker = map.addMarker(markerOptions2);
+            marker.setTag(items.get(itemNum-1));
+
+            map.setOnMarkerClickListener(marker2 -> {
+                marker2.getTag();
+                marker2.showInfoWindow();
+                return true;
+            });
+
+            marker.setAlpha(0.0f);
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
+            marker.showInfoWindow();
+
+            itemNum -= 1;
+        }
+        else
+            Toast.makeText(this, "가장 오래된 일기입니다.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void rightMarker(Marker marker) {
+
+        if(itemNum != items.size() -1) {
+            LatLng latlng2 = new LatLng(Double.parseDouble
+                    (items.get(itemNum+1).getLocationY()),
+                    Double.parseDouble(items.get(itemNum+1).getLocationX()));
+
+            MarkerOptions markerOptions2 = new MarkerOptions();
+            markerOptions2.position(latlng2)
+                    .title(items.get(itemNum+1).address)
+                    .snippet(items.get(itemNum+1).titleOfDiary);
+
+            marker = map.addMarker(markerOptions2);
+            marker.setTag(items.get(itemNum+1));
+
+            map.setOnMarkerClickListener(marker2 -> {
+                marker2.getTag();
+                marker2.showInfoWindow();
+                return true;
+            });
+
+            marker.setAlpha(0.0f);
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 13));
+            marker.showInfoWindow();
+
+            itemNum += 1;
+        }
+        else
+            Toast.makeText(this, "가장 최근 일기입니다.", Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -470,10 +608,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FindCurrentPlaceResponse likelyPlaces = task.getResult();
 
                         deviceLocation = likelyPlaces.getPlaceLikelihoods().get(0).getPlace().getLatLng();
-                        //현재 위치에 마커 추가.. 나중에
+                        //현재 위치 위경도 저장 (default 값)
+                        X = deviceLocation.longitude;
+                        Y = deviceLocation.latitude;
 
                         // 맵 화면 이동
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 13));
+//                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 13));
 
                     }else {
                         Log.e(TAG, "Exception: $s", task.getException());
@@ -516,7 +656,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
          */
         try{
             if (locationPermissionGranted) {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
 
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -525,6 +665,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()) {
                             // camera 위치를 현재 위치로 설정
                             lastKnownLocation = task.getResult();
+                            X = lastKnownLocation.getLongitude();
                             if(lastKnownLocation != null){
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
@@ -541,6 +682,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
+            Toast.makeText(this, " ", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -567,6 +709,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
+    @SuppressLint("MissingPermission")
     private void updateLocationUI() {
         if (map == null) {
             return;
@@ -575,6 +718,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (locationPermissionGranted) {
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
+
             } else {
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(false);

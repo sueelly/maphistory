@@ -78,8 +78,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         }
     }
 
-
-
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout layout1;

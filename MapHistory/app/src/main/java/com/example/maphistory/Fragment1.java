@@ -55,7 +55,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-//import com.pedro.library.AutoPermissions;
+import com.pedro.library.AutoPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -95,7 +95,7 @@ public class Fragment1 extends Fragment {
     DatePickerDialog datePickerDialog;
     FloatingActionButton floatingActionButton;
     public static EditText date;
-    
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -113,6 +113,7 @@ public class Fragment1 extends Fragment {
             listener = null;
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,6 +133,13 @@ public class Fragment1 extends Fragment {
         gallery = rootView.findViewById(R.id.gallery);
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
 
+        // 기본값 오늘 날짜
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        date.setText(setToday(year, month, day));
+
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +147,7 @@ public class Fragment1 extends Fragment {
                 startActivity(intent);
             }
         });
+
         save.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -167,6 +176,7 @@ public class Fragment1 extends Fragment {
 
             }
         });
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +187,7 @@ public class Fragment1 extends Fragment {
 
             }
         });
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +195,7 @@ public class Fragment1 extends Fragment {
                 newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
             }
         });
+
         pictureImageView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -195,6 +207,7 @@ public class Fragment1 extends Fragment {
                 }
             }
         });
+
         writePlace.setOnClickListener(v ->
         {
             //Initialize fragment
@@ -294,6 +307,7 @@ public class Fragment1 extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     public void showPhotoCaptureActivity() {
 
         NewAndListActivity activity = (NewAndListActivity) getActivity();
@@ -324,6 +338,7 @@ public class Fragment1 extends Fragment {
 //            startActivityForResult(intent, AppConstants.REQ_PHOTO_CAPTURE);
 //        }
     }
+
     private File createFile() {
         String filename = createFilename();
         File outFile = new File(context.getFilesDir(), filename);
@@ -331,12 +346,14 @@ public class Fragment1 extends Fragment {
 //        outFile = Environment.getExternalStorageDirectory();
         return outFile;
     }
+
     private String createFilename() {
         Date curDate = new Date();
         String curDateStr = String.valueOf(curDate.getTime());
 
         return curDateStr;
     }
+
     public void setPicture(String picturePath, int sampleSize) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = sampleSize;
@@ -344,12 +361,14 @@ public class Fragment1 extends Fragment {
 
         pictureImageView.setImageBitmap(resultPhotoBitmap);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void showPhotoSelectionActivity() {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, AppConstants.REQ_PHOTO_SELECTION);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -398,6 +417,7 @@ public class Fragment1 extends Fragment {
             }
         }
     }
+
     public static Bitmap decodeSampledBitmapFromResource(File res, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -415,6 +435,7 @@ public class Fragment1 extends Fragment {
 
         return BitmapFactory.decodeFile(res.getAbsolutePath(), options);
     }
+
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -435,6 +456,7 @@ public class Fragment1 extends Fragment {
         }
         return inSampleSize;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String savePicture() {
         if (resultPhotoBitmap == null) {
@@ -457,13 +479,16 @@ public class Fragment1 extends Fragment {
         }
         return picturePath;
     }
+
     public void setItem(Note item) {
         this.item = item;
     }
+
     public void setDateItem(Note item, String dateOfItem) {
         this.item = item;
         item.createDateStr = dateOfItem;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void resetting(Note item) {
 
@@ -475,6 +500,7 @@ public class Fragment1 extends Fragment {
         item.picture = picturePath;
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void applyItem() {
 
@@ -500,6 +526,22 @@ public class Fragment1 extends Fragment {
             if (todayDateFormat == null) {
                 todayDateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
             }
+
         }
+    }
+
+    public String setToday(int year, int month, int day){
+        String month_string = setMonthDay(month+1);
+        String day_string = setMonthDay(day);
+        String year_string = Integer.toString(year);
+        String dateMessage = (year_string + "" + month_string +"" + day_string);
+        return DATE = dateMessage;
+    }
+
+    private String setMonthDay(int num) {
+        if(num <10)
+            return "0" + num;
+        else
+            return Integer.toString(num);
     }
 }
