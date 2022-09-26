@@ -1,5 +1,5 @@
 package com.example.maphistory;
-
+// just test for merge
 
 public class Note {
 
